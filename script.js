@@ -107,7 +107,7 @@ async function preloadAll() {
   const assets = [
     { src: 'image1.png',  type: 'img'   },
     { src: 'image2.gif',  type: 'img'   },
-    { src: 'image3.gif',  type: 'img'   },
+    { src: 'https://drive.google.com/thumbnail?id=1xsNzWygrfDPHyZnm6f1gOm2nT9xKz5Hy&sz=w1000',  type: 'img'   },
     { src: 'music1.mp3',  type: 'audio' },
   ];
 
