@@ -373,7 +373,7 @@ html, body {
   letter-spacing: 0.14em;
 
   /* ↓ COLOR */
-  color: #f8f3e8;
+  color: #6E1A37;
 
   /* ↓ TEXT SHADOW — first layer = dark for readability, second = gold glow */
   text-shadow:
@@ -396,11 +396,11 @@ html, body {
   font-size: clamp(80px, 18vw, 148px);
 
   /* ↓ COLOR */
-  color: #faf6ef;
+  color: #6E1A37;
 
   /* ↓ TEXT SHADOW — dark layer first, then gold glow layers */
   text-shadow:
-    0 3px 32px rgba(0, 0, 0, 0.70),   /* dark shadow for contrast on bright GIF */
+    0 3px 32px rgba(0, 0, 0, 0.70),   
     0 0  60px rgba(201, 164, 90, 0.50),
     0 0 120px rgba(201, 164, 90, 0.20);
 
@@ -472,7 +472,7 @@ html, body {
   text-transform: uppercase;
 
   /* ↓ COLOR */
-  color: rgba(240, 228, 200, 0.95);
+  color: #6E1A37;
 
   text-shadow:
     0 2px 18px rgba(0, 0, 0, 0.65),
