@@ -11,9 +11,6 @@
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!--  SCREEN 1 · PRELOADER                  -->
-  <!-- ═══════════════════════════════════════ -->
   <div id="loader" class="scene active">
     <div class="loader-bg"></div>
     <div class="loader-particles" id="loaderParticles"></div>
@@ -30,9 +27,6 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!--  TAP-TO-ENTER overlay (autoplay block) -->
-  <!-- ═══════════════════════════════════════ -->
   <div id="tapOverlay" class="tap-overlay hidden">
     <div class="tap-inner">
       <img src="image1.png" alt="Monogram" class="tap-logo" />
@@ -41,83 +35,60 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!--  SCREEN 2 · INTRO / BRIDGE SCENE       -->
-  <!-- ═══════════════════════════════════════ -->
   <div id="intro" class="scene hidden">
     <div class="intro-overlay"></div>
     <img src="image2.gif" alt="Just Married" class="intro-img" />
     <div class="intro-vignette"></div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!--  SCREEN 3 · MAIN INVITATION            -->
-  <!-- ═══════════════════════════════════════ -->
   <div id="main" class="scene hidden">
 
-    <!-- GIF fullscreen background -->
     <div class="main-bg-wrap">
-      <img src="image3.gif" alt="Celestial Background" class="main-bg-gif" />
+      <img src="https://drive.google.com/thumbnail?id=1xsNzWygrfDPHyZnm6f1gOm2nT9xKz5Hy&sz=w1000" alt="Celestial Background" class="main-bg-gif" />
     </div>
 
-    <!-- Soft overlay layers -->
     <div class="main-overlay-gradient"></div>
     <div class="main-overlay-vignette"></div>
 
-    <!-- Floating particles canvas -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- ── Invitation Text ── -->
     <div class="invitation-wrap">
 
-      <!-- Decorative top rule -->
       <div class="deco-rule anim-item" data-delay="0">
         <span class="rule-line"></span>
         <span class="rule-diamond">✦</span>
         <span class="rule-line"></span>
       </div>
 
-      <!-- Line 1 -->
       <p class="together anim-item" data-delay="1">
         Together with their families
       </p>
 
-      <!-- Name: Tahany -->
       <h1 class="name-script anim-item" data-delay="2">Tahany</h1>
 
-      <!-- Ampersand -->
       <div class="ampersand-wrap anim-item" data-delay="3">
         <span class="amp-line"></span>
         <span class="amp-char">&amp;</span>
         <span class="amp-line"></span>
       </div>
 
-      <!-- Name: Ahmed -->
       <h1 class="name-script name-script--caps anim-item" data-delay="4">
         Ahmed
       </h1>
 
-      <!-- Decorative mid rule -->
       <div class="deco-rule deco-rule--sm anim-item" data-delay="5">
         <span class="rule-line"></span>
         <span class="rule-diamond">✦</span>
         <span class="rule-line"></span>
       </div>
 
-      <!-- Final line -->
       <p class="invite-line anim-item" data-delay="6">
         invite you to celebrate their wedding
       </p>
 
-      <!-- Bottom ornament -->
       <div class="bottom-ornament anim-item" data-delay="7">✦ ✦ ✦</div>
 
-    </div><!-- /invitation-wrap -->
-
-  </div><!-- /main -->
-
-  <!-- Music (add your audio file as music1.mp3) -->
-  <audio id="bgMusic" src="music1.mp3" loop preload="auto"></audio>
+    </div></div><audio id="bgMusic" src="music1.mp3" loop preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
