@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Aya & Mahmoud — Wedding Invitation</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cormorant+SC:wght@300;400&family=Great+Vibes&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  SCREEN 1 · PRELOADER                  -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="loader" class="scene active">
+    <div class="loader-bg"></div>
+    <div class="loader-particles" id="loaderParticles"></div>
+
+    <div class="loader-content">
+      <div class="logo-wrap">
+        <div class="logo-glow"></div>
+        <img src="image1.png" alt="T & A Monogram" class="logo-img" />
+      </div>
+      <p class="loader-subtitle">Loading your invitation&hellip;</p>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar" id="loaderBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  TAP-TO-ENTER overlay (autoplay block) -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tapOverlay" class="tap-overlay hidden">
+    <div class="tap-inner">
+      <img src="image1.png" alt="Monogram" class="tap-logo" />
+      <p class="tap-label">Tap to Enter</p>
+      <div class="tap-ring"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  SCREEN 2 · INTRO / BRIDGE SCENE       -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="intro" class="scene hidden">
+    <div class="intro-overlay"></div>
+    <img src="image2.gif" alt="Just Married" class="intro-img" />
+    <div class="intro-vignette"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--  SCREEN 3 · MAIN INVITATION            -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="main" class="scene hidden">
+
+    <!-- GIF fullscreen background -->
+    <div class="main-bg-wrap">
+      <img src="image3.gif" alt="Celestial Background" class="main-bg-gif" />
+    </div>
+
+    <!-- Soft overlay layers -->
+    <div class="main-overlay-gradient"></div>
+    <div class="main-overlay-vignette"></div>
+
+    <!-- Floating particles canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- ── Invitation Text ── -->
+    <div class="invitation-wrap">
+
+      <!-- Decorative top rule -->
+      <div class="deco-rule anim-item" data-delay="0">
+        <span class="rule-line"></span>
+        <span class="rule-diamond">✦</span>
+        <span class="rule-line"></span>
+      </div>
+
+      <!-- Line 1 -->
+      <p class="together anim-item" data-delay="1">
+        Together with their families
+      </p>
+
+      <!-- Name: Aya -->
+      <h1 class="name-script anim-item" data-delay="2">Aya</h1>
+
+      <!-- Ampersand -->
+      <div class="ampersand-wrap anim-item" data-delay="3">
+        <span class="amp-line"></span>
+        <span class="amp-char">&amp;</span>
+        <span class="amp-line"></span>
+      </div>
+
+      <!-- Name: Mahmoud -->
+      <h1 class="name-script name-script--caps anim-item" data-delay="4">
+        Mahmoud
+      </h1>
+
+      <!-- Decorative mid rule -->
+      <div class="deco-rule deco-rule--sm anim-item" data-delay="5">
+        <span class="rule-line"></span>
+        <span class="rule-diamond">✦</span>
+        <span class="rule-line"></span>
+      </div>
+
+      <!-- Final line -->
+      <p class="invite-line anim-item" data-delay="6">
+        invite you to celebrate their wedding
+      </p>
+
+      <!-- Bottom ornament -->
+      <div class="bottom-ornament anim-item" data-delay="7">✦ ✦ ✦</div>
+
+    </div><!-- /invitation-wrap -->
+
+  </div><!-- /main -->
+
+  <!-- Music (add your audio file as music1.mp3) -->
+  <audio id="bgMusic" src="music1.mp3" loop preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
