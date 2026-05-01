@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Ahmed & Tahany — Wedding Invitation</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,9 +35,6 @@
 
       --ease-silk: cubic-bezier(0.25, 0.1, 0.1, 1);
       --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
-
-      /* Dynamic viewport unit fallback — overridden by JS on load */
-      --scene-h: 100vh;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,51 +46,22 @@
       font-family: var(--font-serif);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: none;
     }
 
     /* ═══════════════════════════════════════════════════════════════════════
-       SCENE SYSTEM — Robust Cross-Device Sizing
-       Uses svh (Small Viewport Height) to exclude mobile browser chrome,
-       preventing the background-image crop on mobile Chrome/Safari.
+       SCENE SYSTEM — Fully Responsive Full-Bleed Design
+       Uses svh for perfect sizing on mobile browsers (hides URL bar shifts)
        ═══════════════════════════════════════════════════════════════════════ */
     .scene {
       position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100svh;
       display: flex; align-items: center; justify-content: center;
       transition: opacity 1.4s var(--ease-silk);
       z-index: 10;
       background: #0d0a07;
-      box-shadow: 0 0 60px rgba(0,0,0,0.85), 0 0 120px rgba(0,0,0,0.4);
-
-      /* Robust height chain: svh → dvh → var(--scene-h) → 100vh */
-      width: 100vw;
-      height: var(--scene-h);          /* JS-set fallback */
-      height: 100dvh;                  /* dynamic viewport */
-      height: 100svh;                  /* small viewport — best for mobile Chrome */
-    }
-
-    /* Landscape / wide screens: constrain to 9:16 portrait pillar */
-    @media (min-aspect-ratio: 9/16) {
-      .scene {
-        height: 100svh;
-        width: calc(100svh * 9 / 16);
-      }
-      @supports not (height: 100svh) {
-        .scene { height: 100dvh; width: calc(100dvh * 9 / 16); }
-      }
-    }
-
-    /* Portrait screens taller than 16:9: pillarbox by width */
-    @media (max-aspect-ratio: 9/16) {
-      .scene {
-        width: 100svw;
-        height: calc(100svw * 16 / 9);
-        /* Clamp so it never exceeds the screen height */
-        max-height: 100svh;
-        max-height: 100dvh;
-        max-height: 100vh;
-      }
     }
 
     .scene.active { opacity: 1; pointer-events: all; }
@@ -104,7 +72,7 @@
     /* ═══════════════════════════════════════════════════════════════════════
        SCREEN 1 — PRELOADER
        ═══════════════════════════════════════════════════════════════════════ */
-    #loader { flex-direction: column; z-index: 100; background: #0d0a07; }
+    #loader { flex-direction: column; z-index: 100; }
 
     .loader-bg {
       position: absolute; inset: 0;
@@ -158,13 +126,9 @@
     @keyframes logoFadeIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
     .loader-subtitle {
-      font-family: var(--font-sc);
-      font-size: clamp(10px, 1.6vw, 13px);
-      letter-spacing: 0.4em;
-      color: rgba(220,195,145,0.65);
-      text-transform: uppercase;
-      animation: subtitleFade 2s 0.8s ease-out forwards;
-      opacity: 0;
+      font-family: var(--font-sc); font-size: clamp(10px, 1.6vw, 13px);
+      letter-spacing: 0.4em; color: rgba(220,195,145,0.65);
+      text-transform: uppercase; animation: subtitleFade 2s 0.8s ease-out forwards; opacity: 0;
     }
     @keyframes subtitleFade { to { opacity: 1; } }
 
@@ -188,123 +152,68 @@
     .tap-overlay {
       position: fixed; inset: 0; z-index: 200;
       background: rgba(14,10,6,0.9);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       transition: opacity 0.8s ease;
     }
     .tap-overlay.hidden { display: none; }
-
-    .tap-inner {
-      display: flex; flex-direction: column; align-items: center; gap: 24px;
-      animation: tapPulse 2.6s ease-in-out infinite;
-    }
+    .tap-inner { display: flex; flex-direction: column; align-items: center; gap: 24px; animation: tapPulse 2.6s ease-in-out infinite; }
     @keyframes tapPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
-
     .tap-logo  { width: clamp(90px, 20vw, 150px); filter: drop-shadow(0 0 22px rgba(201,164,90,0.5)); }
-    .tap-label {
-      font-family: var(--font-sc); font-size: clamp(11px, 1.9vw, 15px);
-      letter-spacing: 0.45em; color: var(--champagne); text-transform: uppercase;
-    }
-    .tap-ring {
-      position: absolute;
-      width: clamp(160px, 36vw, 270px); aspect-ratio: 1;
-      border-radius: 50%; border: 1px solid rgba(201,164,90,0.3);
-      animation: ringExpand 2.6s ease-out infinite;
-    }
+    .tap-label { font-family: var(--font-sc); font-size: clamp(11px, 1.9vw, 15px); letter-spacing: 0.45em; color: var(--champagne); text-transform: uppercase; }
+    .tap-ring { position: absolute; width: clamp(160px, 36vw, 270px); aspect-ratio: 1; border-radius: 50%; border: 1px solid rgba(201,164,90,0.3); animation: ringExpand 2.6s ease-out infinite; }
     @keyframes ringExpand { 0% { transform: scale(0.85); opacity: 0.8; } 100% { transform: scale(1.3); opacity: 0; } }
 
 
     /* ═══════════════════════════════════════════════════════════════════════
        SCREEN 2 — INTRO / BRIDGE (GIF)
        ═══════════════════════════════════════════════════════════════════════ */
-    #intro { z-index: 50; overflow: hidden; background: #0d0a07; }
-
+    #intro { z-index: 50; overflow: hidden; }
     .intro-img {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; object-position: center;
       animation: cinematicZoom 5s var(--ease-silk) forwards;
     }
     @keyframes cinematicZoom { 0% { transform: scale(1.08); } 100% { transform: scale(1); } }
-
-    .intro-overlay {
-      position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(to bottom,
-        rgba(14,10,6,0.45) 0%, rgba(14,10,6,0.05) 40%,
-        rgba(14,10,6,0.05) 65%, rgba(14,10,6,0.6) 100%);
-    }
-    .intro-vignette {
-      position: absolute; inset: 0; z-index: 2;
-      box-shadow: inset 0 0 140px rgba(14,10,6,0.7);
-      pointer-events: none;
-    }
+    .intro-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, rgba(14,10,6,0.45) 0%, rgba(14,10,6,0.05) 40%, rgba(14,10,6,0.05) 65%, rgba(14,10,6,0.6) 100%); }
+    .intro-vignette { position: absolute; inset: 0; z-index: 2; box-shadow: inset 0 0 140px rgba(14,10,6,0.7); pointer-events: none; }
 
 
     /* ═══════════════════════════════════════════════════════════════════════
        SCREEN 3 — MAIN MULTI-PAGE SYSTEM
        ═══════════════════════════════════════════════════════════════════════ */
     #main {
-      z-index: 20;
-      background: #0d0a07;
-      overflow-y: auto;
-      overflow-x: hidden;
+      z-index: 20; display: block;
+      overflow-y: auto; overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
-      display: block;
       scroll-snap-type: y mandatory;
-      /* Ensure the scrollable area matches the viewport properly */
-      height: 100%;
-      width: 100%;
     }
 
-    /* Particle canvas — fixed within scene bounds */
     #particleCanvas {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100svh;
       z-index: 1; pointer-events: none;
-      width: 100vw; height: 100svh; height: 100dvh; height: 100vh;
-    }
-    @media (min-aspect-ratio: 9/16) {
-      #particleCanvas { height: 100svh; width: calc(100svh * 9 / 16); }
-    }
-    @media (max-aspect-ratio: 9/16) {
-      #particleCanvas { width: 100svw; height: calc(100svw * 16 / 9); max-height: 100svh; }
     }
 
-    /* ─── PAGE BASE ─── */
     .page {
       position: relative;
-      width: 100%;
-      /* Use min-height so content-heavy pages (RSVP) can grow */
-      min-height: 100%;
+      width: 100vw;
+      height: 100svh;
       display: flex; flex-direction: column;
       z-index: 2;
       scroll-snap-align: start;
       scroll-snap-stop: always;
     }
 
-    /* Page 3 RSVP may be taller than viewport — allow it to scroll freely */
-    #page-3 { scroll-snap-stop: normal; }
-
-    /* ─── PAGE BACKGROUND — Using <img> for reliable mobile rendering ─── */
-    .page-bg {
-      position: absolute; inset: 0;
-      overflow: hidden;        /* Contains the img */
-      z-index: 0;
-      background: #0d0a07;    /* Fallback while image loads */
-    }
+    /* Page Background */
+    .page-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; background: #0d0a07; }
     .page-bg-img {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      /* Prevents the "scrolling background" jitter on iOS */
-      will-change: transform;
-      transform: translateZ(0);
+      object-fit: cover; object-position: center; /* Ensures it looks good on ALL ratios */
+      will-change: transform; transform: translateZ(0);
     }
-
     .page-overlay { position: absolute; inset: 0; z-index: 1; }
     .page-content { position: relative; z-index: 2; width: 100%; flex: 1; display: flex; flex-direction: column; }
 
@@ -313,132 +222,47 @@
        PAGE 1 — TITLE / INVITATION
        ═══════════════════════════════════════════════════════════════════════ */
     .invitation-wrap {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: clamp(6px, 1.4vh, 16px);
       padding: clamp(16px, 3vh, 40px) clamp(16px, 6vw, 52px);
-      text-align: center; width: 100%;
-      flex: 1;
-      /* Subtle upward shift to account for the scroll indicator below */
+      text-align: center; width: 100%; flex: 1;
       padding-bottom: clamp(40px, 8vh, 80px);
     }
 
-    /* Entry animations */
     .anim-item { opacity: 0; transform: translateY(22px); transition: opacity 1.3s var(--ease-out), transform 1.3s var(--ease-out); }
     .anim-item.revealed { opacity: 1; transform: translateY(0); }
     .fade-up-scroll { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease-out, transform 0.9s ease-out; }
     .fade-up-scroll.is-visible { opacity: 1; transform: translateY(0); }
 
-    /* Decorative horizontal rules */
-    .deco-rule {
-      display: flex; align-items: center; gap: 12px;
-      width: clamp(140px, 40vw, 300px);
-    }
+    .deco-rule { display: flex; align-items: center; gap: 12px; width: clamp(140px, 40vw, 300px); }
     .deco-rule--sm { width: clamp(80px, 22vw, 170px); }
-    .rule-line {
-      flex: 1; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.65), transparent);
-    }
-    .rule-diamond {
-      font-size: clamp(9px, 1.6vw, 13px);
-      color: #1a1008;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.9)) drop-shadow(0 0 20px rgba(255,255,255,0.5));
-    }
+    .rule-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.65), transparent); }
+    .rule-diamond { font-size: clamp(9px, 1.6vw, 13px); color: #1a1008; filter: drop-shadow(0 0 8px rgba(255,255,255,0.9)) drop-shadow(0 0 20px rgba(255,255,255,0.5)); }
 
-    /* "Together with their families" */
-    .together {
-      font-family: var(--font-serif);
-      font-weight: 400; font-style: italic;
-      font-size: clamp(15px, 3.4vw, 30px);
-      letter-spacing: 0.12em;
-      color: #0a0604;
-      text-shadow:
-        0 0 12px rgba(255,255,255,1),
-        0 0 28px rgba(255,255,255,0.85),
-        0 2px 6px rgba(255,255,255,0.7);
-      -webkit-text-stroke: 0.4px rgba(255,255,255,0.5);
-    }
-
-    /* Main cursive names */
+    .together { font-family: var(--font-serif); font-weight: 400; font-style: italic; font-size: clamp(15px, 3.4vw, 30px); letter-spacing: 0.12em; color: #0a0604; text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 28px rgba(255,255,255,0.85); -webkit-text-stroke: 0.4px rgba(255,255,255,0.5); }
+    
     .name-script {
-      font-family: var(--font-script);
-      font-weight: 400; line-height: 1.0;
-      letter-spacing: 0.01em;
-      font-size: clamp(66px, 15.5vw, 136px);
-      color: #0d0805;
-      text-shadow:
-        0 0 18px rgba(255,255,255,1),
-        0 0 40px rgba(255,255,255,0.9),
-        0 2px 14px rgba(255,255,255,0.8),
-        0 4px 30px rgba(255,255,255,0.4);
-      -webkit-text-stroke: 0.8px rgba(255,255,255,0.6);
-      filter: drop-shadow(0 2px 12px rgba(255,255,255,0.85));
+      font-family: var(--font-script); font-weight: 400; line-height: 1.0; letter-spacing: 0.01em;
+      font-size: clamp(66px, 15vw, 136px); color: #0d0805;
+      text-shadow: 0 0 18px rgba(255,255,255,1), 0 0 40px rgba(255,255,255,0.9), 0 4px 30px rgba(255,255,255,0.4);
+      -webkit-text-stroke: 0.8px rgba(255,255,255,0.6); filter: drop-shadow(0 2px 12px rgba(255,255,255,0.85));
     }
-    .name-script--caps { font-size: clamp(56px, 13vw, 118px); }
+    .name-script--caps { font-size: clamp(56px, 12.5vw, 118px); }
 
-    /* & wrap */
-    .ampersand-wrap {
-      display: flex; align-items: center; gap: clamp(12px, 3vw, 26px);
-      width: clamp(160px, 44vw, 340px);
-    }
+    .ampersand-wrap { display: flex; align-items: center; gap: clamp(12px, 3vw, 26px); width: clamp(160px, 44vw, 340px); }
     .amp-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.5), transparent); }
-    .amp-char {
-      font-family: var(--font-script);
-      font-size: clamp(30px, 6.5vw, 56px); line-height: 1;
-      color: #0d0805;
-      text-shadow:
-        0 0 14px rgba(255,255,255,1),
-        0 0 30px rgba(255,255,255,0.85),
-        0 2px 10px rgba(255,255,255,0.7);
-      -webkit-text-stroke: 0.8px rgba(255,255,255,0.55);
-    }
+    .amp-char { font-family: var(--font-script); font-size: clamp(30px, 6.5vw, 56px); color: #0d0805; text-shadow: 0 0 14px rgba(255,255,255,1), 0 0 30px rgba(255,255,255,0.85); -webkit-text-stroke: 0.8px rgba(255,255,255,0.55); }
 
-    /* "invite you to celebrate their wedding" */
-    .invite-line {
-      font-family: var(--font-sc);
-      font-weight: 600;
-      font-size: clamp(11px, 2.4vw, 20px);
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: #0a0604;
-      text-shadow:
-        0 0 10px rgba(255,255,255,1),
-        0 0 22px rgba(255,255,255,0.85),
-        0 2px 8px rgba(255,255,255,0.7);
-      -webkit-text-stroke: 0.4px rgba(255,255,255,0.5);
-    }
+    .invite-line { font-family: var(--font-sc); font-weight: 600; font-size: clamp(11px, 2.4vw, 20px); letter-spacing: 0.3em; text-transform: uppercase; color: #0a0604; text-shadow: 0 0 10px rgba(255,255,255,1), 0 0 22px rgba(255,255,255,0.85); -webkit-text-stroke: 0.4px rgba(255,255,255,0.5); }
+    .bottom-ornament { font-size: clamp(9px, 1.4vw, 13px); color: #1a1008; letter-spacing: 0.75em; opacity: 0.8; filter: drop-shadow(0 0 10px rgba(255,255,255,0.95)); }
 
-    /* Triple diamond ornament */
-    .bottom-ornament {
-      font-size: clamp(9px, 1.4vw, 13px);
-      color: #1a1008;
-      letter-spacing: 0.75em;
-      opacity: 0.8;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.95));
-    }
-
-    /* Decorative frame lines (top & bottom of page) */
-    .page-frame {
-      position: absolute; left: 5%; right: 5%; z-index: 3; pointer-events: none;
-    }
+    .page-frame { position: absolute; left: 5%; right: 5%; z-index: 3; pointer-events: none; }
     .page-frame--top { top: clamp(12px, 2.5vh, 24px); }
     .page-frame--bot { bottom: clamp(50px, 9vh, 80px); }
-    .page-frame-line {
-      width: 100%; height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.25) 20%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.25) 80%, transparent 100%);
-    }
-    .page-frame-corner {
-      display: flex; justify-content: space-between; margin-top: 4px;
-    }
-    .page-frame-corner span {
-      width: 5px; height: 5px;
-      border-left: 1px solid rgba(0,0,0,0.35);
-      border-top: 1px solid rgba(0,0,0,0.35);
-      filter: drop-shadow(0 0 3px rgba(255,255,255,0.6));
-    }
-    .page-frame-corner span:last-child {
-      transform: scaleX(-1);
-    }
+    .page-frame-line { width: 100%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.25) 20%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.25) 80%, transparent 100%); }
+    .page-frame-corner { display: flex; justify-content: space-between; margin-top: 4px; }
+    .page-frame-corner span { width: 5px; height: 5px; border-left: 1px solid rgba(0,0,0,0.35); border-top: 1px solid rgba(0,0,0,0.35); filter: drop-shadow(0 0 3px rgba(255,255,255,0.6)); }
+    .page-frame-corner span:last-child { transform: scaleX(-1); }
 
     /* Scroll chevron */
     .scroll-separator {
@@ -447,283 +271,128 @@
       z-index: 10; text-decoration: none; cursor: pointer;
     }
     .scroll-separator span {
-      color: var(--maroon);
-      font-family: var(--font-sc); font-weight: 600;
-      font-size: clamp(9px, 1.5vw, 11px);
-      text-transform: uppercase; letter-spacing: 0.32em;
-      text-shadow: 0 0 14px rgba(255,255,255,0.9), 0 0 6px rgba(255,255,255,0.7);
+      color: var(--ivory); font-family: var(--font-sc); font-weight: 600;
+      font-size: clamp(9px, 1.5vw, 11px); text-transform: uppercase; letter-spacing: 0.32em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
     }
     .chevron-down {
-      width: 12px; height: 12px;
-      border-right: 1.5px solid var(--maroon);
-      border-bottom: 1.5px solid var(--maroon);
-      transform: rotate(45deg);
-      animation: bounce 2.2s ease-in-out infinite;
-      filter: drop-shadow(0 2px 6px rgba(255,255,255,0.8));
+      width: 12px; height: 12px; border-right: 1.5px solid var(--ivory); border-bottom: 1.5px solid var(--ivory);
+      transform: rotate(45deg); animation: bounce 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
     }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(45deg); }
-      40%  { transform: translateY(-7px) rotate(45deg); }
-      60%  { transform: translateY(-3px) rotate(45deg); }
-    }
-
+    @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(45deg); } 40% { transform: translateY(-7px) rotate(45deg); } 60% { transform: translateY(-3px) rotate(45deg); } }
 
     /* ═══════════════════════════════════════════════════════════════════════
-       PAGES 2 & 3 — SHARED COMPONENTS
+       PAGES 2 & 3 — POLISHED GLASS & REDUCED FONT SIZES (50%)
        ═══════════════════════════════════════════════════════════════════════ */
 
-    /* Transparent content box */
-    .glass-box {
-      padding: clamp(16px, 4vw, 28px);
-      text-align: center; border-radius: 6px;
-      width: 92%; max-width: 440px;
-      margin: 0 auto;
-    }
-    .no-bg-box { background: transparent !important; border: none !important; box-shadow: none !important; }
-
-    /* Contrast text helpers */
-    .light-bg-primary   { color: var(--maroon);    text-shadow: 0 1px 8px rgba(255,255,255,0.95), 0 0 18px rgba(255,255,255,0.6); }
-    .light-bg-secondary { color: var(--text-dark); text-shadow: 0 1px 8px rgba(255,255,255,0.95), 0 0 14px rgba(255,255,255,0.5); }
-
-    /* ─── Page 2: Date / Location ─── */
-    .event-date {
-      font-family: var(--font-sc);
-      font-size: clamp(20px, 5.5vw, 34px);
-      font-weight: 600; letter-spacing: 0.12em;
-      margin-bottom: 4px;
-    }
-    .event-time {
-      font-family: var(--font-sans);
-      font-size: clamp(13px, 3.2vw, 20px);
-      font-weight: 400; letter-spacing: 0.18em;
-      margin-bottom: clamp(14px, 3vh, 24px);
-    }
-    .event-venue {
-      font-family: var(--font-serif);
-      font-size: clamp(28px, 8vw, 54px);
-      font-weight: 600; letter-spacing: 0.04em;
-      text-transform: uppercase;
-      line-height: 1.08;
-      margin-bottom: 6px;
-    }
-    .event-city {
-      font-family: var(--font-serif);
-      font-size: clamp(18px, 5vw, 30px);
-      font-style: italic; font-weight: 400;
-      margin-bottom: clamp(12px, 2.5vh, 20px);
+    .polished-glass {
+      background: rgba(20, 10, 5, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.05);
+      border-radius: 8px; text-align: center;
+      width: 90%; margin: 0 auto;
     }
 
-    /* Thin gold rule separator used on page 2 */
-    .gold-rule {
-      width: clamp(50px, 14vw, 90px); height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: clamp(8px, 1.5vh, 14px) auto;
-      opacity: 0.7;
+    /* Elegant Light Contrast Text for Dark Glass */
+    .gold-text { color: var(--gold-lt); text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
+    .light-text { color: var(--ivory); text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+
+    /* ─── Page 2: Location (Restricted to Top 40%, 50% Font Size) ─── */
+    .top-40-restrict {
+      height: 42svh; /* Using slightly more than 40 for breathing room */
+      flex: none; display: flex; flex-direction: column; justify-content: center;
+      padding: 0 4vw;
+    }
+    .clear-60-zone {
+      height: 58svh; width: 100%; position: relative; pointer-events: none;
     }
 
-    /* Map */
-    .map-container {
-      border-radius: 8px; overflow: hidden;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
-      border: 1px solid rgba(255,255,255,0.55);
-      max-height: 110px;
-      margin-bottom: 0;
-    }
+    /* 50% Reduced Fonts */
+    .event-date { font-family: var(--font-sc); font-size: clamp(10px, 2.75vw, 17px); font-weight: 600; letter-spacing: 0.12em; margin-bottom: 2px; }
+    .event-time { font-family: var(--font-sans); font-size: clamp(8px, 1.8vw, 10px); font-weight: 400; letter-spacing: 0.18em; margin-bottom: clamp(6px, 1.5vh, 10px); }
+    .event-venue { font-family: var(--font-serif); font-size: clamp(14px, 4vw, 27px); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.08; margin-bottom: 3px; }
+    .event-city { font-family: var(--font-serif); font-size: clamp(9px, 2.5vw, 15px); font-style: italic; font-weight: 400; margin-bottom: clamp(6px, 1.5vh, 10px); }
 
-    /* Action buttons (Map / Calendar) */
-    .action-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+    .gold-rule { width: clamp(30px, 8vw, 50px); height: 1px; background: linear-gradient(90deg, transparent, var(--gold-lt), transparent); margin: clamp(4px, 1vh, 8px) auto; opacity: 0.6; }
+
+    /* Tighter Map & Buttons for Top 40% Fit */
+    .map-container { border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); max-height: 60px; margin-bottom: 0; }
+    .action-buttons { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
     .btn-action {
-      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-      padding: 13px 16px; flex: 1;
-      border: 1px solid rgba(110,26,55,0.28); border-radius: 4px;
-      background: rgba(255,255,255,0.48);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      color: var(--maroon); text-decoration: none;
-      font-weight: 500; font-size: clamp(12px, 2.5vw, 14px);
-      font-family: var(--font-sans); letter-spacing: 0.18em;
-      text-transform: uppercase;
-      transition: background 0.28s, color 0.28s, border-color 0.28s, transform 0.18s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      padding: 8px 10px; flex: 1; border: 1px solid rgba(255,255,255,0.15); border-radius: 4px;
+      background: rgba(255,255,255,0.08); color: var(--ivory); text-decoration: none;
+      font-weight: 500; font-size: clamp(8px, 1.25vw, 9px); font-family: var(--font-sans); letter-spacing: 0.18em; text-transform: uppercase;
+      transition: background 0.28s, border-color 0.28s, transform 0.18s; text-shadow: 0 1px 3px rgba(0,0,0,0.6);
     }
-    .btn-action:hover, .btn-action:active { background: var(--maroon); color: #fff; border-color: var(--maroon); transform: translateY(-1px); }
-    .btn-action svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+    .btn-action:hover, .btn-action:active { background: rgba(255,255,255,0.2); border-color: var(--gold-lt); transform: translateY(-1px); }
+    .btn-action svg { width: 10px; height: 10px; fill: currentColor; flex-shrink: 0; }
     .btn-action svg[stroke] { fill: none; stroke: currentColor; }
 
-    /* ─── Page 3: Countdown ─── */
-    .countdown-grid {
-      display: flex; justify-content: center; gap: clamp(10px, 4vw, 28px);
-      text-align: center;
-      margin-bottom: clamp(16px, 3vh, 28px);
-      padding-bottom: clamp(16px, 3vh, 24px);
-      border-bottom: 1px solid rgba(110,26,55,0.18);
-    }
-    .cd-item { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: clamp(48px, 12vw, 72px); }
-    .cd-num {
-      font-family: var(--font-serif);
-      font-size: clamp(38px, 10vw, 60px);
-      color: var(--maroon); font-weight: 600; line-height: 1;
-      text-shadow: 0 2px 12px rgba(255,255,255,0.95);
-    }
-    .cd-lbl {
-      font-family: var(--font-sans);
-      font-size: clamp(9px, 2vw, 12px);
-      font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em;
-      color: var(--text-dark);
-      text-shadow: 0 1px 6px rgba(255,255,255,0.9);
-    }
-    .cd-sep {
-      font-family: var(--font-serif);
-      font-size: clamp(30px, 8vw, 48px);
-      color: rgba(110,26,55,0.35);
-      font-weight: 300; line-height: 1; padding-top: 4px;
-    }
+    /* ─── Page 3: Countdown & RSVP (50% Font Size) ─── */
+    .countdown-grid { display: flex; justify-content: center; gap: clamp(6px, 2.5vw, 14px); text-align: center; margin-bottom: clamp(8px, 1.5vh, 14px); padding-bottom: clamp(8px, 1.5vh, 12px); border-bottom: 1px solid rgba(255,255,255,0.15); }
+    .cd-item { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: clamp(24px, 6vw, 36px); }
+    .cd-num { font-family: var(--font-serif); font-size: clamp(19px, 5vw, 30px); color: var(--gold-lt); font-weight: 600; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+    .cd-lbl { font-family: var(--font-sans); font-size: clamp(8px, 1.2vw, 9px); font-weight: 500; text-transform: uppercase; letter-spacing: 0.22em; color: var(--ivory); opacity: 0.8; }
+    .cd-sep { font-family: var(--font-serif); font-size: clamp(15px, 4vw, 24px); color: rgba(255,255,255,0.3); font-weight: 300; line-height: 1; padding-top: 2px; }
 
-    /* RSVP headings */
-    .rsvp-title {
-      font-family: var(--font-sc);
-      font-size: clamp(28px, 8vw, 44px);
-      color: var(--maroon); font-weight: 600;
-      text-shadow: 0 2px 10px rgba(255,255,255,0.95);
-      letter-spacing: 0.35em; text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .rsvp-sub {
-      font-family: var(--font-sans);
-      font-size: clamp(11px, 2.5vw, 14px);
-      font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--text-dark);
-      margin-bottom: clamp(18px, 3vh, 28px);
-      text-shadow: 0 1px 6px rgba(255,255,255,0.9);
-    }
+    .rsvp-title { font-family: var(--font-sc); font-size: clamp(14px, 4vw, 22px); color: var(--gold-lt); font-weight: 600; text-shadow: 0 2px 8px rgba(0,0,0,0.6); letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 2px; }
+    .rsvp-sub { font-family: var(--font-sans); font-size: clamp(8px, 1.5vw, 10px); font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ivory); margin-bottom: clamp(10px, 2vh, 14px); opacity: 0.9; }
 
-    /* Form */
-    .rsvp-form { display: flex; flex-direction: column; gap: clamp(14px, 2.5vh, 20px); text-align: left; }
-    .f-field { display: flex; flex-direction: column; gap: 6px; }
-    .f-lbl {
-      font-family: var(--font-sans);
-      font-size: clamp(10px, 2.2vw, 12px);
-      font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase;
-      color: var(--maroon);
-      text-shadow: 0 1px 5px rgba(255,255,255,0.9);
-    }
+    /* Form (Refined Translucent Look & Reduced Size) */
+    .rsvp-form { display: flex; flex-direction: column; gap: clamp(6px, 1.2vh, 10px); text-align: left; }
+    .f-field { display: flex; flex-direction: column; gap: 3px; }
+    .f-lbl { font-family: var(--font-sans); font-size: clamp(8px, 1.2vw, 9px); font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-lt); opacity: 0.9; }
     .f-inp, .f-sel, .f-ta {
-      width: 100%; padding: clamp(12px, 2vh, 16px) 18px;
-      background: rgba(255,255,255,0.52);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(110,26,55,0.25); border-radius: 4px;
-      color: var(--text-dark); font-weight: 400;
-      font-family: var(--font-sans);
-      font-size: clamp(14px, 3.2vw, 18px);
+      width: 100%; padding: clamp(6px, 1vh, 8px) 10px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+      color: #fff; font-weight: 400; font-family: var(--font-sans);
+      font-size: clamp(9px, 1.6vw, 11px);
       outline: none; transition: border-color 0.25s, background 0.25s;
     }
-    .f-inp::placeholder, .f-ta::placeholder { color: rgba(44,26,18,0.5); }
-    .f-inp:focus, .f-sel:focus, .f-ta:focus {
-      border-color: var(--maroon);
-      background: rgba(255,255,255,0.82);
-    }
-    .f-sel {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236E1A37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 14px center;
-      background-color: rgba(255,255,255,0.52);
-    }
-    .f-sel option { background: #fff; color: var(--text-dark); }
-    .f-ta { resize: none; height: 90px; }
+    .f-inp::placeholder, .f-ta::placeholder { color: rgba(255,255,255,0.4); }
+    .f-inp:focus, .f-sel:focus, .f-ta:focus { border-color: var(--gold-lt); background: rgba(0,0,0,0.4); }
+    .f-sel { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e2c97e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+    .f-sel option { background: #1a120a; color: #fff; }
+    .f-ta { resize: none; height: 45px; }
 
-    /* Attendance toggle */
-    .attend-tgl {
-      display: flex; border: 1px solid rgba(110,26,55,0.25); border-radius: 4px; overflow: hidden;
-      background: rgba(255,255,255,0.52);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    }
-    .att-opt {
-      flex: 1; padding: clamp(13px, 2.2vh, 16px) 10px; text-align: center; cursor: pointer;
-      font-size: clamp(12px, 2.8vw, 16px); font-weight: 400; letter-spacing: 0.05em;
-      color: rgba(44,26,18,0.65);
-      border: none; background: transparent; transition: all 0.28s;
-      font-family: var(--font-sans);
-    }
-    .att-opt.sel-yes { background: var(--maroon); color: #fff; }
-    .att-opt.sel-no  { background: rgba(110,26,55,0.08); color: var(--maroon); }
-    .att-sep { width: 1px; background: rgba(110,26,55,0.25); flex-shrink: 0; }
+    .attend-tgl { display: flex; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; background: rgba(0,0,0,0.25); }
+    .att-opt { flex: 1; padding: clamp(6px, 1vh, 8px) 5px; text-align: center; cursor: pointer; font-size: clamp(9px, 1.4vw, 11px); font-weight: 400; letter-spacing: 0.05em; color: rgba(255,255,255,0.6); border: none; background: transparent; transition: all 0.28s; font-family: var(--font-sans); }
+    .att-opt.sel-yes { background: rgba(226, 201, 126, 0.2); color: var(--gold-lt); font-weight: 500; }
+    .att-opt.sel-no  { background: rgba(255, 255, 255, 0.05); color: #fff; }
+    .att-sep { width: 1px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
 
-    /* Guest counter */
-    .guest-ctr {
-      display: flex; align-items: stretch; border: 1px solid rgba(110,26,55,0.25);
-      border-radius: 4px; overflow: hidden;
-      background: rgba(255,255,255,0.52);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    }
-    .g-btn {
-      width: 48px; background: transparent; border: none; cursor: pointer;
-      color: var(--maroon); font-size: 24px;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-    }
-    .g-btn:hover { background: rgba(110,26,55,0.09); }
-    .g-num {
-      flex: 1; text-align: center;
-      font-family: var(--font-serif);
-      font-size: clamp(24px, 6vw, 32px); font-weight: 600;
-      color: var(--maroon); padding: 10px 0; background: transparent;
-    }
+    .guest-ctr { display: flex; align-items: stretch; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; background: rgba(0,0,0,0.25); }
+    .g-btn { width: 30px; background: transparent; border: none; cursor: pointer; color: var(--gold-lt); font-size: 16px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .g-btn:hover { background: rgba(255,255,255,0.1); }
+    .g-num { flex: 1; text-align: center; font-family: var(--font-serif); font-size: clamp(12px, 3vw, 16px); font-weight: 600; color: #fff; padding: 4px 0; background: transparent; }
 
-    /* Submit button */
-    .btn-submit {
-      width: 100%; padding: clamp(14px, 2.5vh, 18px);
-      background: var(--maroon); border: none; border-radius: 4px; color: #fff;
-      cursor: pointer; font-family: var(--font-sans); font-weight: 500;
-      font-size: clamp(12px, 2.6vw, 16px); letter-spacing: 0.3em; text-transform: uppercase;
-      transition: background 0.28s, transform 0.18s; margin-top: 8px;
-    }
-    .btn-submit:hover  { background: var(--text-dark); }
+    .btn-submit { width: 100%; padding: clamp(8px, 1.2vh, 10px); background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; color: #fff; cursor: pointer; font-family: var(--font-sans); font-weight: 500; font-size: clamp(8px, 1.3vw, 10px); letter-spacing: 0.3em; text-transform: uppercase; transition: background 0.28s, border-color 0.2s, transform 0.18s; margin-top: 4px; }
+    .btn-submit:hover  { background: rgba(226, 201, 126, 0.25); border-color: var(--gold-lt); color: var(--gold-lt); }
     .btn-submit:active { transform: scale(0.98); }
 
-    /* RSVP success */
-    .rsvp-success { display: none; text-align: center; padding: 16px 0; }
+    .rsvp-success { display: none; text-align: center; padding: 10px 0; }
     .rsvp-success.show { display: block; }
-    .rs-icon {
-      width: 52px; height: 52px; border-radius: 50%;
-      border: 1px solid var(--maroon);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px;
-      background: rgba(255,255,255,0.62); backdrop-filter: blur(4px);
-    }
-    .rs-icon svg { width: 20px; height: 20px; stroke: var(--maroon); stroke-width: 2; fill: none; }
-    .rsvp-success h3 { font-family: var(--font-script); font-size: clamp(26px, 7vw, 34px); color: var(--maroon); margin-bottom: 8px; }
-    .rsvp-success p  { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: clamp(13px, 3vw, 16px); color: var(--text-dark); margin-bottom: 18px; text-shadow: 0 1px 5px rgba(255,255,255,0.9); }
-    #qr-container { display: flex; justify-content: center; align-items: center; margin: 8px auto; padding: 14px; background: white; border-radius: 8px; width: max-content; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .rs-icon { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gold-lt); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; background: rgba(0,0,0,0.3); }
+    .rs-icon svg { width: 16px; height: 16px; stroke: var(--gold-lt); stroke-width: 2; fill: none; }
+    .rsvp-success h3 { font-family: var(--font-script); font-size: clamp(18px, 5vw, 24px); color: var(--gold-lt); margin-bottom: 4px; }
+    .rsvp-success p  { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: clamp(10px, 2vw, 12px); color: var(--ivory); margin-bottom: 12px; }
+    #qr-container { display: flex; justify-content: center; align-items: center; margin: 6px auto; padding: 10px; background: rgba(255,255,255,0.9); border-radius: 6px; width: max-content; }
 
     /* Audio button */
     #audio-btn {
       position: fixed; top: 18px; right: 18px; z-index: 200;
-      width: 38px; height: 38px; border-radius: 50%;
-      border: 1px solid rgba(110,26,55,0.28);
-      background: rgba(255,255,255,0.52); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.5s ease, background 0.25s;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      opacity: 0; transition: opacity 0.5s ease, background 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.3);
     }
     #audio-btn.visible { opacity: 1; }
-    #audio-btn:hover { background: rgba(255,255,255,0.75); }
-    #audio-btn svg { width: 15px; height: 15px; fill: var(--maroon); }
-
-    /* ═══════════════════════════════════════════════════════════════════════
-       RESPONSIVE OVERRIDES
-       Tighten spacing on small phones without breaking the layout
-       ═══════════════════════════════════════════════════════════════════════ */
-    @media (max-width: 400px) {
-      .invitation-wrap { gap: 5px; padding: 12px 10px clamp(36px, 7vh, 60px); }
-      .name-script      { font-size: clamp(58px, 14.5vw, 100px); }
-      .name-script--caps { font-size: clamp(50px, 12.5vw, 90px); }
-      .ampersand-wrap   { width: clamp(140px, 38vw, 280px); }
-    }
-
-    @media (max-height: 700px) {
-      /* Very short phones (landscape or compact): tighten up */
-      .invitation-wrap { gap: 4px; padding-bottom: clamp(32px, 7vh, 56px); }
-      .countdown-grid  { margin-bottom: 12px; padding-bottom: 12px; }
-      .rsvp-form       { gap: 12px; }
-    }
+    #audio-btn:hover { background: rgba(255,255,255,0.15); }
+    #audio-btn svg { width: 15px; height: 15px; fill: var(--ivory); }
   </style>
 </head>
 <body>
@@ -735,23 +404,17 @@
     <div class="loader-content">
       <div class="logo-wrap">
         <div class="logo-glow"></div>
-        <!-- ✏️ EDIT: Loader Logo Image -->
         <img src="image1.png" alt="T & A Monogram" class="logo-img" onerror="this.style.display='none'" />
       </div>
-      <!-- ✏️ EDIT: Loader Text -->
       <p class="loader-subtitle">Loading your invitation&hellip;</p>
-      <div class="loader-bar-wrap">
-        <div class="loader-bar" id="loaderBar"></div>
-      </div>
+      <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
     </div>
   </div>
 
   <!-- ── TAP OVERLAY ── -->
   <div id="tapOverlay" class="tap-overlay hidden">
     <div class="tap-inner">
-      <!-- ✏️ EDIT: Tap Screen Logo Image -->
       <img src="image1.png" alt="Monogram" class="tap-logo" onerror="this.style.display='none'" />
-      <!-- ✏️ EDIT: Tap Screen Text -->
       <p class="tap-label">Tap to Enter</p>
       <div class="tap-ring"></div>
     </div>
@@ -760,7 +423,6 @@
   <!-- ── INTRO ANIMATION ── -->
   <div id="intro" class="scene hidden">
     <div class="intro-overlay"></div>
-    <!-- ✏️ EDIT: Intro Image or GIF -->
     <img src="image2.gif" alt="Just Married" class="intro-img" onerror="this.style.background='#0d0a07'" />
     <div class="intro-vignette"></div>
   </div>
@@ -771,15 +433,11 @@
 
     <!-- ══════════ PAGE 1: TITLE ══════════ -->
     <div class="page" id="page-1">
-      <!-- ✏️ EDIT: Background Image for Page 1 -->
       <div class="page-bg">
         <img class="page-bg-img" src="https://drive.google.com/thumbnail?id=1xsNzWygrfDPHyZnm6f1gOm2nT9xKz5Hy&sz=w1000" alt="" loading="eager" decoding="async" />
       </div>
+      <div class="page-overlay" style="background: linear-gradient(to bottom, rgba(14,10,6,0.18) 0%, transparent 28%, transparent 65%, rgba(14,10,6,0.55) 100%);"></div>
 
-      <!-- Subtle gradient darkening at top & bottom for readability -->
-      <div class="page-overlay" style="background: linear-gradient(to bottom, rgba(14,10,6,0.18) 0%, transparent 28%, transparent 65%, rgba(14,10,6,0.45) 100%);"></div>
-
-      <!-- Decorative corner frame -->
       <div class="page-frame page-frame--top">
         <div class="page-frame-line"></div>
         <div class="page-frame-corner"><span></span><span></span></div>
@@ -787,142 +445,87 @@
 
       <div class="page-content">
         <div class="invitation-wrap">
-          <div class="deco-rule anim-item" data-delay="0">
-            <span class="rule-line"></span>
-            <span class="rule-diamond">✦</span>
-            <span class="rule-line"></span>
-          </div>
-
-          <!-- ✏️ EDIT: Intro Text -->
+          <div class="deco-rule anim-item" data-delay="0"><span class="rule-line"></span><span class="rule-diamond">✦</span><span class="rule-line"></span></div>
           <p class="together anim-item" data-delay="1">Together with their families</p>
-
-          <!-- ✏️ EDIT: Bride Name -->
           <h1 class="name-script anim-item" data-delay="2">Ahmed</h1>
-
-          <div class="ampersand-wrap anim-item" data-delay="3">
-            <span class="amp-line"></span>
-            <span class="amp-char">&amp;</span>
-            <span class="amp-line"></span>
-          </div>
-
-          <!-- ✏️ EDIT: Groom Name -->
-          <h1 class="name-script name-script--caps anim-item" data-delay="4">Tahany</h1>
-
-          <div class="deco-rule deco-rule--sm anim-item" data-delay="5">
-            <span class="rule-line"></span>
-            <span class="rule-diamond">✦</span>
-            <span class="rule-line"></span>
-          </div>
-
-          <!-- ✏️ EDIT: Invite Text -->
+          <div class="ampersand-wrap anim-item" data-delay="3"><span class="amp-line"></span><span class="amp-char">&amp;</span><span class="amp-line"></span></div>
+          <h1 class="name-script name-script--caps anim-item" data-delay="3">Tahany</h1>
+          <div class="deco-rule deco-rule--sm anim-item" data-delay="5"><span class="rule-line"></span><span class="rule-diamond">✦</span><span class="rule-line"></span></div>
           <p class="invite-line anim-item" data-delay="6">invite you to celebrate their wedding</p>
-
           <div class="bottom-ornament anim-item" data-delay="7">✦ &nbsp; ✦ &nbsp; ✦</div>
         </div>
       </div>
 
-      <!-- Scroll indicator — absolute, so it doesn't affect vertical centering -->
       <a href="#page-2" class="scroll-separator anim-item" data-delay="8">
         <span>Scroll</span>
         <div class="chevron-down"></div>
       </a>
     </div>
 
-    <!-- ══════════ PAGE 2: LOCATION ══════════ -->
+    <!-- ══════════ PAGE 2: LOCATION (Upper 40% only) ══════════ -->
     <div class="page" id="page-2">
-      <!-- ✏️ EDIT: Background Image for Page 2 -->
       <div class="page-bg">
         <img class="page-bg-img" src="https://drive.google.com/thumbnail?id=1pMWs7u0lvQSVLgopy7KaxIhKkiuXNZCQ&sz=w2000" alt="" loading="lazy" decoding="async" />
       </div>
-      <div class="page-overlay" style="background: transparent;"></div>
+      <!-- Subtle darkened gradient at the top to ensure elegant contrast for the glass box -->
+      <div class="page-overlay" style="background: linear-gradient(to bottom, rgba(14,10,6,0.6) 0%, rgba(14,10,6,0.2) 42%, transparent 100%);"></div>
 
-      <div class="page-content" style="justify-content: flex-start; padding-top: clamp(40px, 10vh, 80px);">
-        <div class="glass-box no-bg-box fade-up-scroll">
-
-          <!-- ✏️ EDIT: Wedding Date -->
-          <p class="event-date light-bg-primary">July 4th, 2026</p>
-
+      <!-- Content restricted precisely to Upper ~40% -->
+      <div class="page-content top-40-restrict">
+        <div class="polished-glass fade-up-scroll" style="padding: clamp(8px, 1.5vh, 14px) clamp(10px, 2vw, 16px); max-width: 340px;">
+          <p class="event-date gold-text">July 4th, 2026</p>
           <div class="gold-rule"></div>
+          <p class="event-time light-text">19:00 – 01:00</p>
+          <h2 class="event-venue gold-text">Nile Plaza<br>Ballroom</h2>
+          <p class="event-city light-text">Cairo, Egypt</p>
 
-          <!-- ✏️ EDIT: Wedding Time -->
-          <p class="event-time light-bg-secondary">19:00 – 01:00</p>
-
-          <!-- ✏️ EDIT: Venue Name -->
-          <h2 class="event-venue light-bg-primary">Nile Plaza<br>Ballroom</h2>
-
-          <!-- ✏️ EDIT: Venue City -->
-          <p class="event-city light-bg-secondary">Cairo, Egypt</p>
-
-          <!-- ✏️ EDIT: Google Maps iFrame -->
           <div class="map-container">
-            <iframe
-              src="https://maps.google.com/maps?q=Four+Seasons+Hotel+Cairo+at+Nile+Plaza&t=&z=15&ie=UTF8&iwloc=&output=embed"
-              width="100%" height="110" frameborder="0"
-              style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
-            </iframe>
+            <iframe src="https://maps.google.com/maps?q=Four+Seasons+Hotel+Cairo+at+Nile+Plaza&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="60" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
           </div>
 
           <div class="action-buttons">
-            <!-- ✏️ EDIT: Map App Link -->
             <a class="btn-action" href="https://maps.app.goo.gl/osni3dFd9ezWiSWB6" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg>
-              Map
+              <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg> Map
             </a>
-            <!-- ✏️ EDIT: Google Calendar Link -->
             <a class="btn-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tahany+%26+Ahmed+Wedding&dates=20260704T160000Z/20260704T220000Z&details=Join+us+to+celebrate+our+wedding!&location=Four+Seasons+Hotel+Cairo+at+Nile+Plaza" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-              Calendar
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Calendar
             </a>
           </div>
-
         </div>
-
-        <a href="#page-3" class="scroll-separator" style="position: relative; bottom: auto; left: auto; transform: none; margin: auto 0 clamp(14px, 3vh, 24px);">
+      </div>
+      
+      <!-- Lower 60% entirely clear -->
+      <div class="clear-60-zone">
+        <a href="#page-3" class="scroll-separator">
           <span>Scroll</span>
           <div class="chevron-down"></div>
         </a>
       </div>
     </div>
 
-    <!-- ══════════ PAGE 3: RSVP & COUNTDOWN ══════════ -->
+    <!-- ══════════ PAGE 3: RSVP & COUNTDOWN (50% Font Size) ══════════ -->
     <div class="page" id="page-3">
-      <!-- ✏️ EDIT: Background Image for Page 3 -->
       <div class="page-bg">
         <img class="page-bg-img" src="https://drive.google.com/thumbnail?id=12tz1Zf9DVm8TQs46fQsi6IfobXPXV-Xe&sz=w2000" alt="" loading="lazy" decoding="async" />
       </div>
-      <div class="page-overlay" style="background: transparent;"></div>
+      <div class="page-overlay" style="background: rgba(14,10,6,0.35);"></div>
 
-      <div class="page-content" style="justify-content: flex-start; padding: clamp(20px, 4vh, 36px) 0 clamp(24px, 5vh, 40px);">
-        <div class="glass-box no-bg-box fade-up-scroll">
-
-          <!-- Countdown -->
+      <div class="page-content" style="justify-content: center; padding: 4vh 4vw;">
+        <div class="polished-glass fade-up-scroll" style="padding: clamp(14px, 2.5vh, 20px) clamp(16px, 3vw, 24px); max-width: 360px;">
+          
           <div class="countdown-grid">
-            <div class="cd-item">
-              <span class="cd-num" id="cd-days">00</span>
-              <span class="cd-lbl">Days</span>
-            </div>
+            <div class="cd-item"><span class="cd-num" id="cd-days">00</span><span class="cd-lbl">Days</span></div>
             <span class="cd-sep" aria-hidden="true">:</span>
-            <div class="cd-item">
-              <span class="cd-num" id="cd-hours">00</span>
-              <span class="cd-lbl">Hours</span>
-            </div>
+            <div class="cd-item"><span class="cd-num" id="cd-hours">00</span><span class="cd-lbl">Hours</span></div>
             <span class="cd-sep" aria-hidden="true">:</span>
-            <div class="cd-item">
-              <span class="cd-num" id="cd-mins">00</span>
-              <span class="cd-lbl">Mins</span>
-            </div>
+            <div class="cd-item"><span class="cd-num" id="cd-mins">00</span><span class="cd-lbl">Mins</span></div>
             <span class="cd-sep" aria-hidden="true">:</span>
-            <div class="cd-item">
-              <span class="cd-num" id="cd-secs">00</span>
-              <span class="cd-lbl">Secs</span>
-            </div>
+            <div class="cd-item"><span class="cd-num" id="cd-secs">00</span><span class="cd-lbl">Secs</span></div>
           </div>
 
-          <!-- ✏️ EDIT: RSVP Headings -->
           <h2 class="rsvp-title">R.S.V.P.</h2>
           <p class="rsvp-sub">Kindly reply by June 4th, 2026</p>
 
-          <!-- RSVP Form -->
           <div id="rsvp-form-wrap">
             <form class="rsvp-form" id="rsvp-form" onsubmit="submitRsvp(event)">
               <div class="f-field">
@@ -961,19 +564,15 @@
                 </select>
               </div>
               <div class="f-field">
-                <label class="f-lbl" for="f-msg">Message to Ahmed &amp; Tahany</label>
+                <label class="f-lbl" for="f-msg">Message</label>
                 <textarea class="f-ta" id="f-msg" placeholder="Share a word of love or a memory…"></textarea>
               </div>
-
-              <!-- ✏️ EDIT: RSVP Button Text -->
               <button type="submit" class="btn-submit">Send RSVP</button>
             </form>
           </div>
 
-          <!-- RSVP Success Message -->
           <div class="rsvp-success" id="rsvp-success">
             <div class="rs-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-            <!-- ✏️ EDIT: Success text -->
             <h3>Thank you!</h3>
             <p>Your response is confirmed. Save this digital pass.</p>
             <div id="qr-container"></div>
@@ -981,11 +580,10 @@
 
         </div>
       </div>
-    </div><!-- /page-3 -->
-  </div><!-- /main -->
+    </div>
+  </div>
 
   <!-- ── AUDIO ── -->
-  <!-- ✏️ EDIT: Path to background music file -->
   <audio id="bgMusic" loop preload="auto"><source src="music1.mp3" type="audio/mpeg" /></audio>
   <button id="audio-btn" aria-label="Toggle music">
     <svg id="icon-play"  viewBox="0 0 24 24"><path d="M3 3v18l18-9z"/></svg>
@@ -993,32 +591,16 @@
   </button>
 
   <script>
-    /* ─────────────────────────────────────────────
-       DYNAMIC VIEWPORT FIX FOR MOBILE CHROME
-       Sets --scene-h to the real inner height in px
-       (used as the CSS var fallback before svh/dvh)
-    ───────────────────────────────────────────── */
-    function setDynVH() {
-      document.documentElement.style.setProperty('--scene-h', window.innerHeight + 'px');
-    }
-    setDynVH();
-    window.addEventListener('resize', setDynVH, { passive: true });
-
-    /* ──────────────────────────────────────────────────────────
-       CONFIG & EMAILJS
-    ────────────────────────────────────────────────────────── */
     const CONFIG = {
-      // ✏️ EDIT: Animation Timings and Audio Volume
-      INTRO_DURATION:  4500,  // ms to show the intro GIF
-      ANIM_BASE_DELAY: 300,   // ms before first text line appears
-      ANIM_STEP:       360,   // ms between each text line
-      PARTICLE_COUNT:  50,    // floating particle count
+      INTRO_DURATION:  4500,
+      ANIM_BASE_DELAY: 300,
+      ANIM_STEP:       360,
+      PARTICLE_COUNT:  50,
       PARTICLE_SPEED:  0.35,
       MUSIC_VOLUME:    0.55,
       LOADER_MIN_TIME: 2200,
     };
 
-    // ✏️ EDIT: Your EmailJS Credentials
     const EMAILJS_PUBLIC_KEY  = 'FayuR2XuRfubxlUPV';
     const EMAILJS_SERVICE_ID  = 'eternel.eg@gmail.com';
     const EMAILJS_TEMPLATE_ID = 'template_cvjkm4o';
@@ -1033,14 +615,12 @@
     let musicStarted = false;
     let animFrameId = null;
 
-    /* ── SCENE MANAGEMENT ── */
     function showScene(el) { el.classList.remove('hidden', 'gone'); void el.offsetHeight; el.classList.add('active'); }
     function hideScene(el, andRemove = false) {
       el.classList.remove('active'); el.classList.add('hidden');
       if (andRemove) el.addEventListener('transitionend', () => el.classList.add('gone'), { once: true });
     }
 
-    /* ── LOADER PARTICLES ── */
     function spawnLoaderParticles() {
       for (let i = 0; i < 28; i++) {
         const p = document.createElement('div'); p.className = 'particle';
@@ -1050,7 +630,6 @@
       }
     }
 
-    /* ── ASSET PRELOADER ── */
     function preloadAsset(src, type = 'img') {
       return new Promise(resolve => {
         if (type === 'audio') {
@@ -1065,7 +644,6 @@
     function setProgress(pct) { loaderBar.style.width = `${Math.min(pct, 100)}%`; }
 
     async function preloadAll() {
-      // ✏️ EDIT: List all images and audio used here
       const assets = [
         { src: 'image1.png',  type: 'img' },
         { src: 'image2.gif',  type: 'img' },
@@ -1085,7 +663,6 @@
       await new Promise(r => setTimeout(r, 500));
     }
 
-    /* ── AUDIO ── */
     function setPlay(on) {
       $('icon-play').style.display  = on ? 'none'  : 'block';
       $('icon-pause').style.display = on ? 'block' : 'none';
@@ -1110,7 +687,6 @@
       else { bgMusic.pause(); setPlay(false); }
     });
 
-    /* ── PARTICLES ── */
     class Particle {
       constructor(w, h) { this.reset(w, h, true); }
       reset(w, h, initial = false) {
@@ -1170,7 +746,6 @@
       });
     }, { passive: true });
 
-    /* ── REVEAL ANIMATIONS ── */
     function revealText() {
       document.querySelectorAll('.anim-item').forEach(el => {
         const delay = CONFIG.ANIM_BASE_DELAY + (parseInt(el.dataset.delay || 0) * CONFIG.ANIM_STEP);
@@ -1182,9 +757,7 @@
       entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } });
     }, { threshold: 0.12 });
 
-    /* ── COUNTDOWN ── */
     function initCountdown() {
-      // ✏️ EDIT: Set your Countdown Target Date (Month DD, YYYY HH:MM:SS)
       const targetDate = new Date("July 4, 2026 19:00:00").getTime();
       const elDays = $('cd-days'), elHrs = $('cd-hours'), elMins = $('cd-mins'), elSecs = $('cd-secs');
       function updateTimer() {
@@ -1198,7 +771,6 @@
       updateTimer(); setInterval(updateTimer, 1000);
     }
 
-    /* ── SCROLL CHEVRON CLICK ── */
     document.querySelectorAll('.scroll-separator').forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -1208,7 +780,6 @@
       });
     });
 
-    /* ── RSVP LOGIC ── */
     let attendVal = '', guestCnt = 1;
     function setAttend(v) {
       attendVal = v;
@@ -1234,8 +805,7 @@
       const s = $('rsvp-success'); s.classList.add('show');
       $('qr-container').innerHTML = '';
 
-      // ✏️ EDIT: QR code colors
-      new QRCode($('qr-container'), { text: `ATTENDQR:${guestId}`, width: 150, height: 150, colorDark: '#2c1a12', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      new QRCode($('qr-container'), { text: `ATTENDQR:${guestId}`, width: 120, height: 120, colorDark: '#2c1a12', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
 
       setTimeout(() => {
         const params = { to_email: email || 'no-email', guest_name: name, attendance: attendVal === 'yes' ? 'Attending' : 'Declining', guest_count: guests, dietary: diet || 'None', message: message || 'N/A' };
@@ -1243,7 +813,6 @@
       }, 300);
     }
 
-    /* ── MAIN FLOW ── */
     async function run() {
       spawnLoaderParticles();
       await preloadAll();
