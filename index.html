@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cormorant+SC:wght@300;400&family=Great+Vibes&family=Jost:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;600&family=Great+Vibes&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -24,6 +24,7 @@
       --gold:          #c9a45a;
       --gold-lt:       #e2c97e;
       --maroon:        #6E1A37;
+      --text-dark:     #2c1a12; /* High contrast for light backgrounds */
 
       --font-serif:    'Cormorant Garamond', Georgia, serif;
       --font-sc:       'Cormorant SC', 'Cormorant Garamond', serif;
@@ -56,26 +57,12 @@
       width: 100vw; height: 100vh; /* Fallback for browsers failing constraints */
     }
     
-    /* Screen is WIDER than 9:16 (Desktop, iPad, Landscape) */
     @media (min-aspect-ratio: 9/16) {
-      .scene {
-        height: 100vh;
-        width: calc(100vh * (9 / 16));
-      }
-      @supports (height: 100dvh) {
-        .scene {
-          height: 100dvh;
-          width: calc(100dvh * (9 / 16));
-        }
-      }
+      .scene { height: 100vh; width: calc(100vh * (9 / 16)); }
+      @supports (height: 100dvh) { .scene { height: 100dvh; width: calc(100dvh * (9 / 16)); } }
     }
-    
-    /* Screen is NARROWER than 9:16 (Modern tall phones) */
     @media (max-aspect-ratio: 9/16) {
-      .scene {
-        width: 100vw;
-        height: calc(100vw * (16 / 9)); /* Defends against mobile keyboard height collapse */
-      }
+      .scene { width: 100vw; height: calc(100vw * (16 / 9)); }
     }
 
     .scene.active { opacity: 1; pointer-events: all; }
@@ -135,7 +122,7 @@
       overflow-x: hidden; 
       scroll-behavior: smooth; 
       display: block; 
-      scroll-snap-type: y mandatory; /* Stricter elegant swipe snapping */
+      scroll-snap-type: y mandatory; 
     }
     
     #particleCanvas { 
@@ -147,28 +134,17 @@
     }
     
     @media (min-aspect-ratio: 9/16) {
-      #particleCanvas {
-        height: 100vh;
-        width: calc(100vh * (9 / 16));
-      }
-      @supports (height: 100dvh) {
-        #particleCanvas {
-          height: 100dvh;
-          width: calc(100dvh * (9 / 16));
-        }
-      }
+      #particleCanvas { height: 100vh; width: calc(100vh * (9 / 16)); }
+      @supports (height: 100dvh) { #particleCanvas { height: 100dvh; width: calc(100dvh * (9 / 16)); } }
     }
     @media (max-aspect-ratio: 9/16) {
-      #particleCanvas {
-        width: 100vw;
-        height: calc(100vw * (16 / 9));
-      }
+      #particleCanvas { width: 100vw; height: calc(100vw * (16 / 9)); }
     }
 
     .page { 
       position: relative; 
       width: 100%; 
-      min-height: 100%; /* Maps perfectly to the 9:16 parent constraint */
+      min-height: 100%; 
       display: flex; flex-direction: column; 
       z-index: 2; 
       scroll-snap-align: start; 
@@ -195,17 +171,17 @@
     .rule-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,164,90,0.75), transparent); }
     .rule-diamond { font-size: clamp(10px, 1.8vw, 14px); color: #e2c97e; filter: drop-shadow(0 0 6px rgba(201,164,90,0.8)); }
 
-    .together { font-family: var(--font-serif); font-weight: 300; font-style: italic; font-size: clamp(16px, 3vw, 26px); letter-spacing: 0.14em; color: var(--maroon); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.70), 0 0 32px rgba(201, 164, 90, 0.30); }
-    .name-script { font-family: var(--font-script); font-weight: 400; line-height: 1; letter-spacing: 0.02em; font-size: clamp(80px, 18vw, 148px); color: var(--maroon); text-shadow: 0 3px 32px rgba(0, 0, 0, 0.70), 0 0 60px rgba(201, 164, 90, 0.50), 0 0 120px rgba(201, 164, 90, 0.20); filter: drop-shadow(0 2px 22px rgba(0, 0, 0, 0.55)); }
+    .together { font-family: var(--font-serif); font-weight: 300; font-style: italic; font-size: clamp(16px, 3vw, 26px); letter-spacing: 0.14em; color: var(--ivory); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.70), 0 0 32px rgba(201, 164, 90, 0.30); }
+    .name-script { font-family: var(--font-script); font-weight: 400; line-height: 1; letter-spacing: 0.02em; font-size: clamp(80px, 18vw, 148px); color: var(--ivory); text-shadow: 0 3px 32px rgba(0, 0, 0, 0.70), 0 0 60px rgba(201, 164, 90, 0.50), 0 0 120px rgba(201, 164, 90, 0.20); filter: drop-shadow(0 2px 22px rgba(0, 0, 0, 0.55)); }
     .name-script--caps { font-size: clamp(68px, 15vw, 128px); }
     
     .ampersand-wrap { display: flex; align-items: center; gap: clamp(14px, 3.5vw, 28px); width: clamp(180px, 48vw, 360px); }
     .amp-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,164,90,0.55), transparent); }
     .amp-char { font-family: var(--font-script); font-size: clamp(36px, 7.5vw, 62px); color: #e2c97e; line-height: 1; text-shadow: 0 2px 22px rgba(0, 0, 0, 0.60), 0 0 40px rgba(201, 164, 90, 0.55); }
-    .invite-line { font-family: var(--font-sc); font-weight: 300; font-size: clamp(13px, 2.4vw, 20px); letter-spacing: 0.32em; text-transform: uppercase; color: var(--maroon); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65), 0 0 24px rgba(201, 164, 90, 0.25); }
+    .invite-line { font-family: var(--font-sc); font-weight: 300; font-size: clamp(13px, 2.4vw, 20px); letter-spacing: 0.32em; text-transform: uppercase; color: var(--ivory); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65), 0 0 24px rgba(201, 164, 90, 0.25); }
     .bottom-ornament { font-size: clamp(10px, 1.6vw, 14px); color: #e2c97e; letter-spacing: 0.8em; opacity: 0.85; filter: drop-shadow(0 0 8px rgba(201,164,90,0.7)); }
 
-    /* Elegant Scroll Separator - Fixed positioning to avoid overlapping bugs */
+    /* Elegant Scroll Separator */
     .scroll-separator { 
       margin-top: auto; 
       margin-bottom: 25px; 
@@ -213,12 +189,19 @@
       display: flex; flex-direction: column; align-items: center; gap: 8px; 
       z-index: 10; text-decoration: none; cursor: pointer;
     }
-    .scroll-separator span { color: var(--gold-lt); font-family: var(--font-sc); font-size: 11px; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    .chevron-down { width: 14px; height: 14px; border-right: 2px solid var(--gold-lt); border-bottom: 2px solid var(--gold-lt); transform: rotate(45deg); animation: bounce 2s infinite; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
+    .scroll-separator span { color: var(--maroon); font-family: var(--font-sc); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 10px rgba(255,255,255,0.8); }
+    .chevron-down { width: 14px; height: 14px; border-right: 2px solid var(--maroon); border-bottom: 2px solid var(--maroon); transform: rotate(45deg); animation: bounce 2s infinite; filter: drop-shadow(0 2px 5px rgba(255,255,255,0.8)); }
     @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(45deg); } 40% { transform: translateY(-8px) rotate(45deg); } 60% { transform: translateY(-4px) rotate(45deg); } }
 
-    /* Custom UI Containers */
-    .glass-box { padding: clamp(24px, 6vw, 36px); text-align: center; border-radius: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 90%; margin: 0 auto; }
+    /* Custom UI Containers - Made Narrower */
+    .glass-box { 
+      padding: clamp(20px, 5vw, 30px); 
+      text-align: center; border-radius: 6px; 
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
+      width: 80%; /* Much narrower */
+      max-width: 320px; /* Constrained for a clean profile */
+      margin: 0 auto; 
+    }
     
     /* Totally Transparent Override Box */
     .no-bg-box {
@@ -228,78 +211,86 @@
     }
 
     /* Map Elements */
-    .map-container { margin-top: 14px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.6); border: none; max-height: 140px; }
-    .btn-map { 
-      display: inline-flex; align-items: center; justify-content: center; gap: 9px; margin-top: 12px; padding: 10px 20px; 
-      border: 1px solid rgba(201,164,90,0.3); border-radius: 4px; 
-      background: rgba(0,0,0,0.15); /* Significantly more transparent */
-      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); /* Classy glass effect */
-      color: var(--gold-lt); text-decoration: none; font-weight: 300; font-size: 11px; font-family: var(--font-sans); letter-spacing: .2em; text-transform: uppercase; transition: background 0.3s, color 0.3s; 
+    .map-container { margin-top: 14px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.6); max-height: 120px; }
+    
+    .action-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
+    .btn-action { 
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; 
+      padding: 10px 16px; flex: 1;
+      border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; 
+      background: rgba(255,255,255,0.5); /* Frosted Light Glass */
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
+      color: var(--maroon); text-decoration: none; font-weight: 500; font-size: 11px; font-family: var(--font-sans); letter-spacing: .15em; text-transform: uppercase; transition: all 0.3s; 
     }
-    .btn-map:hover { background: var(--gold-lt); color: #000; }
-    .btn-map svg { width: 13px; height: 13px; fill: currentColor; }
+    .btn-action:hover { background: var(--maroon); color: #fff; }
+    .btn-action svg { width: 14px; height: 14px; fill: currentColor; }
+    .btn-action svg[stroke] { fill: none; stroke: currentColor; }
+
+    /* Text contrast classes for light backgrounds */
+    .light-bg-primary { color: var(--maroon); text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
+    .light-bg-secondary { color: var(--text-dark); text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
 
     /* RSVP & Countdown Elements */
-    .countdown-grid { display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(201,164,90,0.3); padding-bottom: 20px;}
+    .countdown-grid { display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(110,26,55,0.2); padding-bottom: 20px;}
     .cd-item { display: flex; flex-direction: column; gap: 4px; }
-    .cd-item span:first-child { font-family: var(--font-serif); font-size: clamp(28px, 7vw, 36px); color: var(--gold-lt); text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
-    .cd-lbl { font-family: var(--font-sans); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(255,255,255,0.9); text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    .cd-item span:first-child { font-family: var(--font-serif); font-size: clamp(28px, 7vw, 36px); color: var(--maroon); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
+    .cd-lbl { font-family: var(--font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-dark); text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
 
-    .rsvp-title { font-family: var(--font-serif); font-size: clamp(24px, 6vw, 32px); color: var(--gold-lt); text-shadow: 0 2px 6px rgba(0,0,0,0.8); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
-    .rsvp-sub { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.9); margin-bottom: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    .rsvp-title { font-family: var(--font-serif); font-size: clamp(28px, 7vw, 36px); color: var(--maroon); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.9); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+    .rsvp-sub { font-family: var(--font-sans); font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dark); margin-bottom: 24px; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
     
     .rsvp-form { display: flex; flex-direction: column; gap: 14px; text-align: left;}
     .f-field { display: flex; flex-direction: column; gap: 6px; }
-    .f-lbl { font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-lt); text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    .f-lbl { font-family: var(--font-sans); font-size: 10px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--maroon); text-shadow: 0 1px 5px rgba(255,255,255,0.9); }
     
-    /* Highly transparent Glass Inputs */
+    /* Frosted Light Inputs for Light BG */
     .f-inp, .f-sel, .f-ta { 
       width: 100%; padding: 12px 16px; 
-      background: rgba(0, 0, 0, 0.15); 
-      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-      border: 1px solid rgba(201,164,90,0.3); border-radius: 4px; color: #fff; font-family: var(--font-sans); font-size: 14px; outline: none; transition: border-color 0.3s, background 0.3s; 
+      background: rgba(255, 255, 255, 0.5); 
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; color: var(--text-dark); font-weight: 500; font-family: var(--font-sans); font-size: 14px; outline: none; transition: all 0.3s; 
     }
-    .f-inp::placeholder, .f-ta::placeholder { color: rgba(255,255,255,0.6); }
-    .f-inp:focus, .f-sel:focus, .f-ta:focus { border-color: var(--gold-lt); background: rgba(0,0,0,0.3); }
-    .f-sel { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e2c97e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
-    .f-sel option { background: #1a120a; color: #fff; }
+    .f-inp::placeholder, .f-ta::placeholder { color: rgba(44, 26, 18, 0.6); }
+    .f-inp:focus, .f-sel:focus, .f-ta:focus { border-color: var(--maroon); background: rgba(255,255,255,0.8); }
+    .f-sel { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236E1A37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+    .f-sel option { background: #fff; color: var(--text-dark); }
     .f-ta { resize: none; height: 80px; }
 
     .attend-tgl { 
-      display: flex; border: 1px solid rgba(201,164,90,0.3); border-radius: 4px; overflow: hidden; 
-      background: rgba(0,0,0,0.15); 
-      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      display: flex; border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; overflow: hidden; 
+      background: rgba(255, 255, 255, 0.5); 
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     }
-    .att-opt { flex: 1; padding: 12px 8px; text-align: center; cursor: pointer; font-size: 12px; letter-spacing: 0.08em; color: rgba(255,255,255,0.7); border: none; background: transparent; transition: background 0.3s, color 0.3s; font-family: var(--font-sans); }
-    .att-opt.sel-yes { background: rgba(201,164,90,0.25); color: #fff; }
-    .att-opt.sel-no  { background: rgba(201,164,90,0.1); color: #fff; }
-    .att-sep { width: 1px; background: rgba(201,164,90,0.3); flex-shrink: 0; }
+    .att-opt { flex: 1; padding: 12px 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; color: rgba(44, 26, 18, 0.7); border: none; background: transparent; transition: all 0.3s; font-family: var(--font-sans); }
+    .att-opt.sel-yes { background: var(--maroon); color: #fff; }
+    .att-opt.sel-no  { background: rgba(110, 26, 55, 0.1); color: var(--maroon); }
+    .att-sep { width: 1px; background: rgba(110, 26, 55, 0.3); flex-shrink: 0; }
 
     .guest-ctr { 
-      display: flex; align-items: stretch; border: 1px solid rgba(201,164,90,0.3); border-radius: 4px; overflow: hidden; 
-      background: rgba(0,0,0,0.15); 
-      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      display: flex; align-items: stretch; border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; overflow: hidden; 
+      background: rgba(255, 255, 255, 0.5); 
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     }
-    .g-btn { width: 42px; background: transparent; border: none; cursor: pointer; color: var(--gold-lt); font-size: 18px; display: flex; align-items: center; justify-content: center; }
-    .g-btn:hover { background: rgba(201,164,90,0.3); }
-    .g-num { flex: 1; text-align: center; font-family: var(--font-serif); font-size: 20px; color: #fff; padding: 10px 0; background: transparent; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    .g-btn { width: 42px; background: transparent; border: none; cursor: pointer; color: var(--maroon); font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .g-btn:hover { background: rgba(110, 26, 55, 0.1); }
+    .g-num { flex: 1; text-align: center; font-family: var(--font-serif); font-size: 20px; font-weight: 600; color: var(--maroon); padding: 10px 0; background: transparent; }
 
-    .btn-submit { width: 100%; padding: 14px; background: var(--gold-lt); border: none; border-radius: 4px; color: #000; cursor: pointer; font-family: var(--font-sans); font-weight: 400; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; transition: background 0.3s, transform 0.2s; margin-top: 6px;}
-    .btn-submit:hover { background: #fff; }
+    .btn-submit { width: 100%; padding: 14px; background: var(--maroon); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-family: var(--font-sans); font-weight: 500; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; transition: background 0.3s, transform 0.2s; margin-top: 6px;}
+    .btn-submit:hover { background: var(--text-dark); }
     .btn-submit:active { transform: scale(0.98); }
 
     .rsvp-success { display: none; text-align: center; padding: 20px 0; }
     .rsvp-success.show { display: block; }
-    .rs-icon { width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--gold-lt); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-    .rs-icon svg { width: 22px; height: 22px; stroke: var(--gold-lt); stroke-width: 2; fill: none; }
-    .rsvp-success h3 { font-family: var(--font-script); font-size: 32px; color: var(--gold-lt); margin-bottom: 10px; }
-    .rsvp-success p { font-family: var(--font-serif); font-style: italic; font-size: 16px; color: #fff; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    #qr-container { display: flex; justify-content: center; align-items: center; margin: 10px auto; padding: 15px; background: white; border-radius: 8px; width: max-content; }
+    .rs-icon { width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--maroon); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; background: rgba(255,255,255,0.6); backdrop-filter: blur(4px);}
+    .rs-icon svg { width: 22px; height: 22px; stroke: var(--maroon); stroke-width: 2; fill: none; }
+    .rsvp-success h3 { font-family: var(--font-script); font-size: 32px; color: var(--maroon); margin-bottom: 10px; }
+    .rsvp-success p { font-family: var(--font-serif); font-style: italic; font-weight: 600; font-size: 16px; color: var(--text-dark); margin-bottom: 20px; text-shadow: 0 1px 5px rgba(255,255,255,0.9); }
+    #qr-container { display: flex; justify-content: center; align-items: center; margin: 10px auto; padding: 15px; background: white; border-radius: 8px; width: max-content; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 
     /* Audio Button */
-    #audio-btn { position: fixed; top: 20px; right: 20px; z-index: 200; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(201,164,90,0.4); background: rgba(13,10,7,0.6); backdrop-filter: blur(8px); cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease; }
+    #audio-btn { position: fixed; top: 20px; right: 20px; z-index: 200; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(110,26,55,0.3); background: rgba(255,255,255,0.5); backdrop-filter: blur(8px); cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1);}
     #audio-btn.visible { opacity: 1; }
-    #audio-btn svg { width: 16px; height: 16px; fill: var(--gold-lt); }
+    #audio-btn svg { width: 16px; height: 16px; fill: var(--maroon); }
 
     /* Mobile Overrides */
     @media (max-width: 480px) {
@@ -382,23 +373,31 @@
       <div class="page-bg" style="background-image: url('https://drive.google.com/thumbnail?id=1pMWs7u0lvQSVLgopy7KaxIhKkiuXNZCQ&sz=w2000');"></div>
       <div class="page-overlay" style="background: transparent;"></div>
       
-      <div class="page-content" style="justify-content: flex-start; padding-top: 4vh;">
-        <div class="glass-box no-bg-box fade-up-scroll" style="padding-top: 10px; padding-bottom: 0;">
+      <div class="page-content" style="justify-content: flex-start; padding-top: 12vh;">
+        <div class="glass-box no-bg-box fade-up-scroll" style="padding-top: 10px; padding-bottom: 20px;">
           
-          <p style="font-family: var(--font-sc); font-size: 14px; letter-spacing: 0.2em; color: var(--gold-lt); margin-bottom: 4px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">July 4th, 2026</p>
-          <p style="font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.2em; color: #fff; margin-bottom: 14px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">19:00 – 01:00</p>
+          <p style="font-family: var(--font-sc); font-size: 18px; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 4px; text-transform: uppercase;" class="light-bg-primary">July 4th, 2026</p>
+          <p style="font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.2em; margin-bottom: 20px; text-transform: uppercase;" class="light-bg-secondary">19:00 – 01:00</p>
           
-          <h2 class="rsvp-title" style="margin-bottom: 2px;">Nile Plaza Ballroom</h2>
-          <p style="font-family: var(--font-serif); font-size: 18px; font-style: italic; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Cairo, Egypt</p>
+          <h2 style="font-family: var(--font-serif); font-size: clamp(32px, 8vw, 44px); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;" class="light-bg-primary">Nile Plaza Ballroom</h2>
+          <p style="font-family: var(--font-serif); font-size: 22px; font-style: italic; font-weight: 600;" class="light-bg-secondary">Cairo, Egypt</p>
           
           <div class="map-container">
-            <iframe src="https://maps.google.com/maps?q=Four+Seasons+Hotel+Cairo+at+Nile+Plaza&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="140" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            <iframe src="https://maps.google.com/maps?q=Four+Seasons+Hotel+Cairo+at+Nile+Plaza&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="120" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
           </div>
           
-          <a class="btn-map" href="https://maps.app.goo.gl/osni3dFd9ezWiSWB6" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg>
-            Open in App
-          </a>
+          <div class="action-buttons">
+            <a class="btn-action" href="https://maps.app.goo.gl/osni3dFd9ezWiSWB6" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg>
+              Map
+            </a>
+            <!-- Google Calendar Event Link Gen -->
+            <a class="btn-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tahany+%26+Ahmed+Wedding&dates=20260704T160000Z/20260704T220000Z&details=Join+us+to+celebrate+our+wedding!&location=Four+Seasons+Hotel+Cairo+at+Nile+Plaza" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              Calendar
+            </a>
+          </div>
+
         </div>
 
         <a href="#page-3" class="scroll-separator">
@@ -446,7 +445,7 @@
                   <button type="button" class="att-opt" id="att-no" onclick="setAttend('no')">✕   Regretfully declines</button>
                 </div>
               </div>
-              <div class="f-field" id="guest-field">
+              <div class="f-field" id="guest-field" style="display:none;">
                 <label class="f-lbl">Number of guests</label>
                 <div class="guest-ctr">
                   <button type="button" class="g-btn" onclick="changeGuests(-1)">−</button>
@@ -689,7 +688,7 @@
       attendVal = v;
       $('att-yes').className = 'att-opt' + (v==='yes'?' sel-yes':'');
       $('att-no').className  = 'att-opt' + (v==='no' ?' sel-no' :'');
-      $('guest-field').style.display = v==='yes' ? '' : 'none';
+      $('guest-field').style.display = v==='yes' ? 'flex' : 'none';
     }
     function changeGuests(d) {
       guestCnt = Math.max(1, Math.min(10, guestCnt+d));
@@ -708,7 +707,7 @@
       $('rsvp-form-wrap').style.display = 'none';
       const s = $('rsvp-success'); s.classList.add('show');
       $('qr-container').innerHTML = '';
-      new QRCode($('qr-container'), { text: `ATTENDQR:${guestId}`, width: 160, height: 160, colorDark: '#0b1820', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      new QRCode($('qr-container'), { text: `ATTENDQR:${guestId}`, width: 160, height: 160, colorDark: '#2c1a12', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
 
       setTimeout(() => {
         const templateParams = {
