@@ -186,7 +186,7 @@
 
     /* ✏️ EDIT TEXT STYLES: Text is black with a subtle white glow for perfect readability */
     .together { 
-      font-family: var(--font-serif); font-weight: 500; font-style: italic; font-size: clamp(16px, 3vw, 26px); letter-spacing: 0.14em; 
+      font-family: var(--font-serif); font-weight: 500; font-style: italic; font-size: clamp(24px, 4.5vw, 39px); letter-spacing: 0.14em; 
       color: #000; 
       -webkit-text-stroke: 0.5px rgba(255,255,255,0.6); 
       text-shadow: 0 2px 10px rgba(255, 255, 255, 0.9), 0 0 15px rgba(255, 255, 255, 0.8); 
@@ -212,7 +212,7 @@
     }
     
     .invite-line { 
-      font-family: var(--font-sc); font-weight: 600; font-size: clamp(13px, 2.4vw, 20px); letter-spacing: 0.32em; text-transform: uppercase; 
+      font-family: var(--font-sc); font-weight: 600; font-size: clamp(20px, 3.6vw, 30px); letter-spacing: 0.32em; text-transform: uppercase; 
       color: #000; 
       -webkit-text-stroke: 0.5px rgba(255,255,255,0.6);
       text-shadow: 0 2px 10px rgba(255, 255, 255, 0.9), 0 0 15px rgba(255, 255, 255, 0.8); 
@@ -243,8 +243,8 @@
       text-align: center; border-radius: 6px; 
       box-shadow: 0 8px 32px rgba(0,0,0,0.1); 
       /* ✏️ EDIT: Adjust the width of the central text block here */
-      width: 80%; 
-      max-width: 320px; 
+      width: 90%; 
+      max-width: 460px; 
       margin: 0 auto; 
     }
     
@@ -262,12 +262,12 @@
     .action-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
     .btn-action { 
       display: inline-flex; align-items: center; justify-content: center; gap: 6px; 
-      padding: 10px 16px; flex: 1;
+      padding: 14px 20px; flex: 1;
       border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; 
       /* ✏️ EDIT: Button background color and blur effect */
       background: rgba(255,255,255,0.5); /* Frosted Light Glass */
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
-      color: var(--maroon); text-decoration: none; font-weight: 500; font-size: 11px; font-family: var(--font-sans); letter-spacing: .15em; text-transform: uppercase; transition: all 0.3s; 
+      color: var(--maroon); text-decoration: none; font-weight: 500; font-size: 16px; font-family: var(--font-sans); letter-spacing: .15em; text-transform: uppercase; transition: all 0.3s; 
     }
     .btn-action:hover { background: var(--maroon); color: #fff; }
     .btn-action svg { width: 14px; height: 14px; fill: currentColor; }
@@ -278,32 +278,32 @@
     .light-bg-secondary { color: var(--text-dark); text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
 
     /* RSVP & Countdown Elements */
-    .countdown-grid { display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(110,26,55,0.2); padding-bottom: 20px;}
-    .cd-item { display: flex; flex-direction: column; gap: 4px; }
+    .countdown-grid { display: flex; justify-content: space-around; text-align: center; margin-bottom: 24px; border-bottom: 1px solid rgba(110,26,55,0.2); padding-bottom: 24px;}
+    .cd-item { display: flex; flex-direction: column; gap: 8px; }
     /* ✏️ EDIT: Countdown Numbers styling */
-    .cd-item span:first-child { font-family: var(--font-serif); font-size: clamp(28px, 7vw, 36px); color: var(--maroon); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
+    .cd-item span:first-child { font-family: var(--font-serif); font-size: clamp(48px, 10vw, 64px); color: var(--maroon); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
     /* ✏️ EDIT: Countdown Labels (Days, Hours) styling */
-    .cd-lbl { font-family: var(--font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-dark); text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
+    .cd-lbl { font-family: var(--font-sans); font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-dark); text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
 
-    .rsvp-title { font-family: var(--font-serif); font-size: clamp(28px, 7vw, 36px); color: var(--maroon); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.9); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
-    .rsvp-sub { font-family: var(--font-sans); font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dark); margin-bottom: 24px; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
+    .rsvp-title { font-family: var(--font-serif); font-size: clamp(48px, 10vw, 64px); color: var(--maroon); font-weight: 600; text-shadow: 0 2px 10px rgba(255,255,255,0.9); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+    .rsvp-sub { font-family: var(--font-sans); font-size: 18px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dark); margin-bottom: 32px; text-shadow: 0 2px 10px rgba(255,255,255,0.9); }
     
-    .rsvp-form { display: flex; flex-direction: column; gap: 14px; text-align: left;}
-    .f-field { display: flex; flex-direction: column; gap: 6px; }
-    .f-lbl { font-family: var(--font-sans); font-size: 10px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--maroon); text-shadow: 0 1px 5px rgba(255,255,255,0.9); }
+    .rsvp-form { display: flex; flex-direction: column; gap: 20px; text-align: left;}
+    .f-field { display: flex; flex-direction: column; gap: 8px; }
+    .f-lbl { font-family: var(--font-sans); font-size: 16px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--maroon); text-shadow: 0 1px 5px rgba(255,255,255,0.9); }
     
     /* ✏️ EDIT: Input fields styling (Name, Email, Message boxes) */
     .f-inp, .f-sel, .f-ta { 
-      width: 100%; padding: 12px 16px; 
+      width: 100%; padding: 16px 20px; 
       background: rgba(255, 255, 255, 0.5); /* Frosted Glass background */
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; color: var(--text-dark); font-weight: 500; font-family: var(--font-sans); font-size: 14px; outline: none; transition: all 0.3s; 
+      border: 1px solid rgba(110, 26, 55, 0.3); border-radius: 4px; color: var(--text-dark); font-weight: 500; font-family: var(--font-sans); font-size: 20px; outline: none; transition: all 0.3s; 
     }
     .f-inp::placeholder, .f-ta::placeholder { color: rgba(44, 26, 18, 0.6); }
     .f-inp:focus, .f-sel:focus, .f-ta:focus { border-color: var(--maroon); background: rgba(255,255,255,0.8); }
     .f-sel { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236E1A37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
     .f-sel option { background: #fff; color: var(--text-dark); }
-    .f-ta { resize: none; height: 80px; }
+    .f-ta { resize: none; height: 100px; }
 
     /* ✏️ EDIT: Toggle Button Styling (Joyfully accepts / Regretfully declines) */
     .attend-tgl { 
@@ -311,7 +311,7 @@
       background: rgba(255, 255, 255, 0.5); 
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     }
-    .att-opt { flex: 1; padding: 12px 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; color: rgba(44, 26, 18, 0.7); border: none; background: transparent; transition: all 0.3s; font-family: var(--font-sans); }
+    .att-opt { flex: 1; padding: 16px 12px; text-align: center; cursor: pointer; font-size: 18px; font-weight: 500; letter-spacing: 0.08em; color: rgba(44, 26, 18, 0.7); border: none; background: transparent; transition: all 0.3s; font-family: var(--font-sans); }
     .att-opt.sel-yes { background: var(--maroon); color: #fff; }
     .att-opt.sel-no  { background: rgba(110, 26, 55, 0.1); color: var(--maroon); }
     .att-sep { width: 1px; background: rgba(110, 26, 55, 0.3); flex-shrink: 0; }
@@ -321,12 +321,12 @@
       background: rgba(255, 255, 255, 0.5); 
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     }
-    .g-btn { width: 42px; background: transparent; border: none; cursor: pointer; color: var(--maroon); font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .g-btn { width: 50px; background: transparent; border: none; cursor: pointer; color: var(--maroon); font-size: 28px; display: flex; align-items: center; justify-content: center; }
     .g-btn:hover { background: rgba(110, 26, 55, 0.1); }
-    .g-num { flex: 1; text-align: center; font-family: var(--font-serif); font-size: 20px; font-weight: 600; color: var(--maroon); padding: 10px 0; background: transparent; }
+    .g-num { flex: 1; text-align: center; font-family: var(--font-serif); font-size: 32px; font-weight: 600; color: var(--maroon); padding: 12px 0; background: transparent; }
 
     /* ✏️ EDIT: Submit RSVP Button */
-    .btn-submit { width: 100%; padding: 14px; background: var(--maroon); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-family: var(--font-sans); font-weight: 500; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; transition: background 0.3s, transform 0.2s; margin-top: 6px;}
+    .btn-submit { width: 100%; padding: 18px; background: var(--maroon); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-family: var(--font-sans); font-weight: 500; font-size: 18px; letter-spacing: 0.25em; text-transform: uppercase; transition: background 0.3s, transform 0.2s; margin-top: 10px;}
     .btn-submit:hover { background: var(--text-dark); }
     .btn-submit:active { transform: scale(0.98); }
 
@@ -451,16 +451,16 @@
         <div class="glass-box no-bg-box fade-up-scroll" style="padding-top: 10px; padding-bottom: 20px;">
           
           <!-- ✏️ EDIT: Wedding Date -->
-          <p style="font-family: var(--font-sc); font-size: 18px; font-weight: 600; letter-spacing: 0.2em; margin-bottom: 4px; text-transform: uppercase;" class="light-bg-primary">July 4th, 2026</p>
+          <p style="font-family: var(--font-sc); font-size: 32px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 8px; text-transform: uppercase;" class="light-bg-primary">July 4th, 2026</p>
           
           <!-- ✏️ EDIT: Wedding Time -->
-          <p style="font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.2em; margin-bottom: 20px; text-transform: uppercase;" class="light-bg-secondary">19:00 – 01:00</p>
+          <p style="font-family: var(--font-sans); font-size: 24px; font-weight: 500; letter-spacing: 0.1em; margin-bottom: 24px; text-transform: uppercase;" class="light-bg-secondary">19:00 – 01:00</p>
           
           <!-- ✏️ EDIT: Venue Name -->
-          <h2 style="font-family: var(--font-serif); font-size: clamp(32px, 8vw, 44px); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;" class="light-bg-primary">Nile Plaza Ballroom</h2>
+          <h2 style="font-family: var(--font-serif); font-size: clamp(42px, 10vw, 64px); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;" class="light-bg-primary">Nile Plaza Ballroom</h2>
           
           <!-- ✏️ EDIT: Venue City/Country -->
-          <p style="font-family: var(--font-serif); font-size: 22px; font-style: italic; font-weight: 600;" class="light-bg-secondary">Cairo, Egypt</p>
+          <p style="font-family: var(--font-serif); font-size: 36px; font-style: italic; font-weight: 600;" class="light-bg-secondary">Cairo, Egypt</p>
           
           <!-- ✏️ EDIT: Google Maps iFrame URL for the venue -->
           <div class="map-container">
