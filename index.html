@@ -428,7 +428,6 @@
 
   <div id="intro" class="scene hidden">
     <div class="intro-overlay"></div>
-    <!-- Source is attached dynamically on interaction so it doesn't play prematurely -->
     <img id="intro-img-element" alt="Just Married" class="intro-img" onerror="this.style.background='#0d0a07'" />
     <div class="intro-vignette"></div>
   </div>
@@ -754,11 +753,6 @@
     // Google Sheets Submission Logic
     async function submitRsvp(e) {
       e.preventDefault();
-      
-      if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwapm6R_xxGRzFlZEL_qWX_JPYCNVyyIRYZEefQaSzwkz5hq7MZDHj9oLURlptViyuaDQ/exec') {
-        alert("Developer Note: You must add your Google Web App URL to the JavaScript code to make this work!");
-        return;
-      }
 
       const name    = $('f-name').value.trim();
       const message = $('f-msg') ? $('f-msg').value.trim() : '';
