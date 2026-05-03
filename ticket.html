@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ahmed & Tahany — Digital Guest Pass</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,600;1,700&family=Cormorant+SC:wght@300;400;600;700&family=Parisienne&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ivory:        #f8f3e8;
+      --champagne:    #e8d5a3;
+      --champagne-dk: #c9a96e;
+      --cream:        #faf6ef;
+      --gold:         #c9a45a;
+      --gold-lt:      #e2c97e;
+      --gold-dk:      #a07830;
+      --maroon:       #6E1A37;
+      --maroon-lt:    #8b2347;
+      --text-dark:    #2c1a12;
+
+      --font-serif:  'Cormorant Garamond', Georgia, serif;
+      --font-sc:     'Cormorant SC', 'Cormorant Garamond', serif;
+      --font-script: 'Parisienne', cursive;
+      --font-sans:   'Jost', sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      background: #080504;
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── AMBIENT BACKGROUND ─────────────────────────────────────── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 130% 80% at 20% 10%, rgba(110,26,55,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 100% 100% at 80% 85%, rgba(201,164,90,0.12) 0%, transparent 50%),
+        linear-gradient(160deg, #180d0a 0%, #0d0806 40%, #160c09 70%, #1c1009 100%);
+    }
+    #particleCanvas {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      width: 100vw; height: 100vh;
+    }
+
+    /* ── LOADER ────────────────────────────────────────────────── */
+    #loading-screen {
+      position: fixed; inset: 0; z-index: 500;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+      background: #080504;
+      transition: opacity 0.7s ease;
+    }
+    #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+    .load-monogram {
+      font-family: var(--font-script); font-size: clamp(36px, 10vw, 56px);
+      color: var(--gold); opacity: 0;
+      animation: fadePop 0.9s 0.2s var(--ease-out) forwards;
+      filter: drop-shadow(0 0 24px rgba(201,164,90,0.5));
+    }
+    .load-bar-wrap { width: clamp(80px, 30vw, 140px); height: 1px; background: rgba(201,164,90,0.15); border-radius: 1px; overflow: hidden; }
+    .load-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--champagne-dk), var(--gold-lt), var(--champagne-dk)); background-size: 200% 100%; border-radius: 1px; transition: width 0.3s ease; animation: shimmer 2s linear infinite; }
+    @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+    .load-text { font-family: var(--font-sc); font-size: clamp(9px, 1.5vw, 11px); letter-spacing: 0.4em; color: rgba(220,195,145,0.5); text-transform: uppercase; opacity: 0; animation: fadePop 0.8s 0.5s ease forwards; }
+    @keyframes fadePop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ── ERROR SCREEN ──────────────────────────────────────────── */
+    #error-screen {
+      position: fixed; inset: 0; z-index: 400;
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+      padding: 40px;
+      text-align: center;
+    }
+    #error-screen.show { display: flex; }
+    .err-icon { font-size: 32px; opacity: 0.6; }
+    .err-title { font-family: var(--font-sc); font-size: clamp(16px, 4vw, 22px); letter-spacing: 0.25em; color: var(--champagne); }
+    .err-msg { font-family: var(--font-serif); font-style: italic; font-size: clamp(13px, 3vw, 16px); color: rgba(220,195,145,0.55); max-width: 280px; line-height: 1.6; }
+
+    /* ── MAIN TICKET CONTAINER ─────────────────────────────────── */
+    #ticket-wrap {
+      position: relative; z-index: 10;
+      min-height: 100svh;
+      display: none; flex-direction: column; align-items: center;
+      padding: clamp(28px, 7vh, 64px) clamp(16px, 5vw, 32px) clamp(40px, 8vh, 80px);
+    }
+    #ticket-wrap.show { display: flex; }
+
+    /* ── TOP HEADER ─────────────────────────────────────────────── */
+    .pass-header {
+      text-align: center; margin-bottom: clamp(20px, 4vh, 36px);
+      animation: riseIn 0.9s 0.1s var(--ease-out) both;
+    }
+    .pass-eyebrow {
+      font-family: var(--font-sc); font-size: clamp(8px, 1.5vw, 10px);
+      letter-spacing: 0.5em; color: rgba(201,164,90,0.5); text-transform: uppercase; margin-bottom: 8px;
+    }
+    .pass-couple {
+      font-family: var(--font-script); font-size: clamp(42px, 11vw, 72px);
+      color: var(--gold-lt); line-height: 1;
+      filter: drop-shadow(0 0 20px rgba(201,164,90,0.35));
+    }
+    .pass-amp { font-size: clamp(28px, 7vw, 46px); color: rgba(201,164,90,0.5); margin: 0 4px; }
+
+    /* ── TICKET CARD ──────────────────────────────────────────── */
+    .ticket-card {
+      width: 100%; max-width: 420px;
+      background: rgba(255,252,245,0.04);
+      border: 1px solid rgba(201,164,90,0.2);
+      border-radius: 2px;
+      position: relative; overflow: hidden;
+      animation: riseIn 0.9s 0.25s var(--ease-out) both;
+    }
+    @keyframes riseIn { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+    /* Corner ornaments */
+    .tc-corner {
+      position: absolute; width: 16px; height: 16px; z-index: 4;
+      border-color: rgba(201,164,90,0.45);
+      border-style: solid;
+    }
+    .tc-corner--tl { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+    .tc-corner--tr { top: 10px; right: 10px; border-width: 1px 1px 0 0; }
+    .tc-corner--bl { bottom: 10px; left: 10px; border-width: 0 0 1px 1px; }
+    .tc-corner--br { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+
+    /* Horizontal perforation / tear line */
+    .tear-line {
+      width: 100%; height: 1px;
+      border-top: 1px dashed rgba(201,164,90,0.22);
+      position: relative; margin: 0;
+    }
+    .tear-circle-l, .tear-circle-r {
+      position: absolute; top: -7px;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: #080504; border: 1px solid rgba(201,164,90,0.2);
+    }
+    .tear-circle-l { left: -7px; }
+    .tear-circle-r { right: -7px; }
+
+    /* ── TICKET STUB (top) — STATUS BANNER ──────────────────────── */
+    .ticket-stub {
+      padding: clamp(16px, 3.5vh, 26px) clamp(20px, 5vw, 32px);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .stub-label {
+      font-family: var(--font-sc); font-size: clamp(7px, 1.2vw, 8px);
+      letter-spacing: 0.45em; color: rgba(201,164,90,0.4); text-transform: uppercase; margin-bottom: 4px;
+    }
+    .stub-event {
+      font-family: var(--font-serif); font-size: clamp(11px, 2.5vw, 14px);
+      color: rgba(248,243,232,0.6); font-style: italic;
+    }
+    .status-badge {
+      flex-shrink: 0; padding: 6px 14px; border-radius: 2px;
+      font-family: var(--font-sc); font-size: clamp(8px, 1.3vw, 9px);
+      letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600;
+    }
+    .status-badge.attending  { background: rgba(110,26,55,0.35); border: 1px solid rgba(110,26,55,0.6); color: #e8b4c2; }
+    .status-badge.declining  { background: rgba(50,40,30,0.4); border: 1px solid rgba(201,164,90,0.25); color: rgba(220,195,145,0.55); }
+
+    /* ── TICKET BODY ──────────────────────────────────────────── */
+    .ticket-body { padding: clamp(20px, 4vh, 32px) clamp(20px, 5vw, 32px); }
+
+    .body-label {
+      font-family: var(--font-sc); font-size: clamp(7px, 1.1vw, 8px);
+      letter-spacing: 0.45em; color: rgba(201,164,90,0.4); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .guest-name {
+      font-family: var(--font-script); font-size: clamp(36px, 9vw, 56px);
+      color: var(--ivory); line-height: 1.1; margin-bottom: clamp(18px, 3vh, 28px);
+      filter: drop-shadow(0 2px 14px rgba(201,164,90,0.25));
+    }
+
+    .details-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2.5vh, 20px) clamp(12px, 3vw, 20px);
+      margin-bottom: clamp(18px, 3vh, 26px);
+    }
+    .detail-cell {}
+    .detail-cell--full { grid-column: 1 / -1; }
+
+    .detail-val {
+      font-family: var(--font-serif); font-size: clamp(13px, 3vw, 16px);
+      color: var(--champagne); font-weight: 300; line-height: 1.4;
+    }
+    .detail-val em { font-style: italic; color: rgba(220,195,145,0.65); font-size: 0.9em; }
+
+    .gold-rule { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,164,90,0.3), transparent); margin: clamp(16px, 2.5vh, 22px) 0; }
+
+    /* ── MESSAGE BLOCK ────────────────────────────────────────── */
+    .message-block {
+      background: rgba(201,164,90,0.04);
+      border-left: 2px solid rgba(201,164,90,0.25); border-radius: 0 2px 2px 0;
+      padding: 12px 16px;
+    }
+    .message-text {
+      font-family: var(--font-serif); font-style: italic; font-size: clamp(13px, 3vw, 16px);
+      color: rgba(248,243,232,0.55); line-height: 1.65;
+    }
+    .message-text::before { content: '\201C'; margin-right: 2px; color: rgba(201,164,90,0.4); }
+    .message-text::after  { content: '\201D'; margin-left: 2px;  color: rgba(201,164,90,0.4); }
+
+    /* ── TICKET FOOTER / STUB ─────────────────────────────────── */
+    .ticket-footer {
+      padding: clamp(14px, 2.8vh, 22px) clamp(20px, 5vw, 32px);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .footer-event-info {}
+    .footer-event-name { font-family: var(--font-sc); font-size: clamp(10px, 2vw, 12px); letter-spacing: 0.22em; color: rgba(248,243,232,0.45); }
+    .footer-event-date { font-family: var(--font-serif); font-size: clamp(11px, 2.5vw, 14px); color: rgba(201,164,90,0.5); font-style: italic; }
+    .footer-id { font-family: var(--font-sans); font-size: clamp(7px, 1.1vw, 8px); color: rgba(201,164,90,0.25); letter-spacing: 0.2em; text-align: right; }
+
+    /* ── VERIFY SEAL ─────────────────────────────────────────── */
+    .seal-wrap {
+      width: 100%; max-width: 420px; margin-top: clamp(18px, 3vh, 28px);
+      display: flex; align-items: center; gap: 12px;
+      animation: riseIn 0.9s 0.45s var(--ease-out) both;
+    }
+    .seal-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,164,90,0.2)); }
+    .seal-line--r { background: linear-gradient(270deg, transparent, rgba(201,164,90,0.2)); }
+    .seal-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--font-sc); font-size: clamp(8px, 1.4vw, 9px);
+      letter-spacing: 0.3em; color: rgba(201,164,90,0.4); text-transform: uppercase;
+    }
+    .seal-badge svg { width: 12px; height: 12px; stroke: rgba(201,164,90,0.45); fill: none; stroke-width: 2; }
+
+    /* ── EVENT DETAILS STRIP ──────────────────────────────────── */
+    .event-strip {
+      width: 100%; max-width: 420px; margin-top: clamp(22px, 4vh, 36px);
+      padding: clamp(18px, 3.5vh, 26px) clamp(20px, 5vw, 32px);
+      border: 1px solid rgba(201,164,90,0.12); border-radius: 2px;
+      background: rgba(255,252,245,0.02);
+      animation: riseIn 0.9s 0.6s var(--ease-out) both;
+      text-align: center;
+    }
+    .strip-eyebrow { font-family: var(--font-sc); font-size: clamp(7px, 1.2vw, 8px); letter-spacing: 0.45em; color: rgba(201,164,90,0.3); text-transform: uppercase; margin-bottom: 12px; }
+    .strip-venue { font-family: var(--font-sc); font-size: clamp(14px, 3.5vw, 18px); letter-spacing: 0.2em; color: rgba(248,243,232,0.55); margin-bottom: 4px; }
+    .strip-date { font-family: var(--font-serif); font-style: italic; font-size: clamp(12px, 2.5vw, 15px); color: rgba(201,164,90,0.45); margin-bottom: 10px; }
+    .strip-address { font-family: var(--font-sans); font-size: clamp(9px, 1.5vw, 10px); letter-spacing: 0.15em; color: rgba(201,164,90,0.25); text-transform: uppercase; }
+    .map-link {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+      padding: 8px 18px; border: 1px solid rgba(110,26,55,0.35); border-radius: 2px;
+      background: rgba(110,26,55,0.12);
+      font-family: var(--font-sc); font-size: clamp(8px, 1.3vw, 9px); letter-spacing: 0.3em;
+      color: rgba(232,180,194,0.7); text-decoration: none; text-transform: uppercase;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .map-link:hover { background: rgba(110,26,55,0.28); border-color: rgba(110,26,55,0.6); }
+    .map-link svg { width: 10px; height: 10px; fill: currentColor; }
+
+    /* ── DECLINING STATE (greyed out card) ─────────────────────── */
+    .ticket-card.declining .guest-name { color: rgba(248,243,232,0.4); }
+    .ticket-card.declining .ticket-body { opacity: 0.65; }
+
+    /* ── GRAIN TEXTURE OVERLAY ───────────────────────────────── */
+    .grain {
+      position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer"></div>
+  <canvas id="particleCanvas"></canvas>
+  <div class="grain"></div>
+
+  <!-- LOADING -->
+  <div id="loading-screen">
+    <div class="load-monogram">A & T</div>
+    <div class="load-bar-wrap"><div class="load-bar" id="loadBar"></div></div>
+    <p class="load-text">Retrieving your pass…</p>
+  </div>
+
+  <!-- ERROR -->
+  <div id="error-screen">
+    <div class="err-icon">✦</div>
+    <p class="err-title">Pass Not Found</p>
+    <p class="err-msg" id="err-detail">We couldn't locate this guest pass. Please verify the QR code or contact the hosts.</p>
+  </div>
+
+  <!-- TICKET -->
+  <div id="ticket-wrap">
+
+    <header class="pass-header">
+      <p class="pass-eyebrow">Digital Guest Pass</p>
+      <div class="pass-couple">
+        Ahmed<span class="pass-amp"> & </span>Tahany
+      </div>
+    </header>
+
+    <div class="ticket-card" id="ticketCard">
+      <div class="tc-corner tc-corner--tl"></div>
+      <div class="tc-corner tc-corner--tr"></div>
+      <div class="tc-corner tc-corner--bl"></div>
+      <div class="tc-corner tc-corner--br"></div>
+
+      <!-- Top stub -->
+      <div class="ticket-stub">
+        <div>
+          <p class="stub-label">Wedding of</p>
+          <p class="stub-event">Ahmed & Tahany</p>
+        </div>
+        <div class="status-badge" id="statusBadge">Attending</div>
+      </div>
+
+      <div class="tear-line">
+        <div class="tear-circle-l"></div>
+        <div class="tear-circle-r"></div>
+      </div>
+
+      <!-- Body -->
+      <div class="ticket-body">
+        <p class="body-label">Guest Name</p>
+        <div class="guest-name" id="guestName">—</div>
+
+        <div class="details-grid">
+          <div class="detail-cell">
+            <p class="body-label">Attendance</p>
+            <p class="detail-val" id="attendanceVal">—</p>
+          </div>
+          <div class="detail-cell">
+            <p class="body-label">Party Size</p>
+            <p class="detail-val" id="partySizeVal">—</p>
+          </div>
+        </div>
+
+        <div class="gold-rule"></div>
+
+        <div id="messageWrap" style="display:none;">
+          <p class="body-label">Message</p>
+          <div class="message-block">
+            <p class="message-text" id="messageVal"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tear-line">
+        <div class="tear-circle-l"></div>
+        <div class="tear-circle-r"></div>
+      </div>
+
+      <!-- Footer stub -->
+      <div class="ticket-footer">
+        <div class="footer-event-info">
+          <p class="footer-event-name">Nile Plaza Ballroom</p>
+          <p class="footer-event-date">Saturday, July 4th, 2026</p>
+        </div>
+        <p class="footer-id" id="passId">—</p>
+      </div>
+    </div>
+
+    <!-- Verification seal -->
+    <div class="seal-wrap">
+      <span class="seal-line"></span>
+      <div class="seal-badge">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Verified Pass
+      </div>
+      <span class="seal-line seal-line--r"></span>
+    </div>
+
+    <!-- Event info strip -->
+    <div class="event-strip">
+      <p class="strip-eyebrow">Event Details</p>
+      <p class="strip-venue">Nile Plaza Ballroom</p>
+      <p class="strip-date">Saturday, July 4th, 2026 · 19:00 – 01:00</p>
+      <p class="strip-address">Cairo, Egypt</p>
+      <a class="map-link" href="https://maps.app.goo.gl/osni3dFd9ezWiSWB6" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg>
+        Open in Maps
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // ─── CONFIG ──────────────────────────────────────────────────────
+    // ⚠️ PASTE YOUR SAME GOOGLE APPS SCRIPT URL HERE
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwapm6R_xxGRzFlZEL_qWX_JPYCNVyyIRYZEefQaSzwkz5hq7MZDHj9oLURlptViyuaDQ/exec';
+
+    // ─── PARTICLES ───────────────────────────────────────────────────
+    const canvas = document.getElementById('particleCanvas');
+    const ctx    = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    class Particle {
+      constructor() { this.reset(true); }
+      reset(init = false) {
+        this.x     = Math.random() * canvas.width;
+        this.y     = init ? Math.random() * canvas.height : canvas.height + 10;
+        this.size  = 0.8 + Math.random() * 2;
+        this.speed = 0.08 + Math.random() * 0.18;
+        this.drift = (Math.random() - 0.5) * 0.25;
+        this.life  = 0;
+        this.max   = 200 + Math.random() * 250;
+        this.glow  = Math.random() > 0.6;
+      }
+      alpha() {
+        const t = this.life / this.max;
+        if (t < 0.15) return t / 0.15;
+        if (t > 0.75) return 1 - (t - 0.75) / 0.25;
+        return 1;
+      }
+      draw() {
+        const a = this.alpha() * 0.5;
+        if (this.glow) {
+          const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
+          g.addColorStop(0, `rgba(225,198,140,${a})`);
+          g.addColorStop(1, 'rgba(225,198,140,0)');
+          ctx.fillStyle = g; ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.fillStyle = `rgba(242,218,165,${a})`;
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+      }
+      update() { this.x += this.drift; this.y -= this.speed; this.life++; }
+    }
+    function initParticles() {
+      resizeCanvas();
+      particles = Array.from({ length: 40 }, () => new Particle());
+      (function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); if (p.life >= p.max) p.reset(); });
+        requestAnimationFrame(loop);
+      })();
+    }
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+    initParticles();
+
+    // ─── LOAD BAR ANIMATION ─────────────────────────────────────────
+    let loadPct = 0;
+    const loadBar = document.getElementById('loadBar');
+    const loadInterval = setInterval(() => {
+      loadPct = Math.min(loadPct + Math.random() * 12, 85);
+      loadBar.style.width = loadPct + '%';
+    }, 200);
+
+    function finishLoad() {
+      clearInterval(loadInterval);
+      loadBar.style.width = '100%';
+    }
+
+    // ─── UI HELPERS ─────────────────────────────────────────────────
+    function showTicket(data) {
+      finishLoad();
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('fade-out');
+        setTimeout(() => {
+          document.getElementById('loading-screen').style.display = 'none';
+          renderTicket(data);
+          document.getElementById('ticket-wrap').classList.add('show');
+        }, 700);
+      }, 300);
+    }
+
+    function showError(msg) {
+      finishLoad();
+      document.getElementById('loading-screen').classList.add('fade-out');
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        if (msg) document.getElementById('err-detail').textContent = msg;
+        document.getElementById('error-screen').classList.add('show');
+      }, 700);
+    }
+
+    function renderTicket(data) {
+      const isAttending = (data.attendance || '').toLowerCase() === 'attending';
+      const card = document.getElementById('ticketCard');
+
+      // Status badge
+      const badge = document.getElementById('statusBadge');
+      badge.textContent = isAttending ? '✓ Attending' : '✕ Declining';
+      badge.className   = 'status-badge ' + (isAttending ? 'attending' : 'declining');
+      if (!isAttending) card.classList.add('declining');
+
+      // Guest name
+      document.getElementById('guestName').textContent = data.name || '—';
+
+      // Attendance label
+      document.getElementById('attendanceVal').textContent = isAttending ? 'Joyfully accepts' : 'Regretfully declines';
+
+      // Party size
+      const count = parseInt(data.guestCount) || 0;
+      document.getElementById('partySizeVal').textContent =
+        isAttending ? (count === 1 ? '1 Guest' : count + ' Guests') : '—';
+
+      // Message
+      const msg = (data.message || '').trim();
+      if (msg && msg !== 'N/A' && msg !== '') {
+        document.getElementById('messageVal').textContent = msg;
+        document.getElementById('messageWrap').style.display = 'block';
+      }
+
+      // Pass ID
+      document.getElementById('passId').textContent = data.guestId || '';
+    }
+
+    // ─── FETCH GUEST DATA ───────────────────────────────────────────
+    async function fetchGuest(id) {
+      const url = APPS_SCRIPT_URL + '?id=' + encodeURIComponent(id);
+      try {
+        const res  = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        showTicket(data);
+      } catch (err) {
+        console.error('Guest lookup failed:', err);
+        showError('Unable to retrieve pass data. Please check your connection or contact the hosts.');
+      }
+    }
+
+    // ─── ENTRY POINT ────────────────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const guestId = params.get('id');
+
+    if (!guestId) {
+      showError('No guest ID found in this link. Please scan the QR code again.');
+    } else {
+      fetchGuest(guestId);
+    }
+  </script>
+</body>
+</html>
