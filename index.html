@@ -168,6 +168,11 @@
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; object-position: center;
       animation: cinematicZoom 8s var(--ease-silk) forwards; /* Updated to 8s */
+      /* Anti-flicker fixes */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translate3d(0, 0, 0); 
+      will-change: transform;
     }
     @keyframes cinematicZoom { 0% { transform: scale(1.08); } 100% { transform: scale(1); } }
     .intro-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, rgba(14,10,6,0.45) 0%, rgba(14,10,6,0.05) 40%, rgba(14,10,6,0.05) 65%, rgba(14,10,6,0.6) 100%); }
@@ -205,7 +210,11 @@
       position: absolute; inset: 0;
       width: 100%; height: 100%;
       object-fit: cover; object-position: center;
-      will-change: transform; transform: translateZ(0);
+      will-change: transform; 
+      /* Anti-flicker fixes */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translate3d(0, 0, 0);
     }
     .page-overlay { position: absolute; inset: 0; z-index: 1; }
     .page-content { position: relative; z-index: 2; width: 100%; flex: 1; display: flex; flex-direction: column; }
@@ -624,7 +633,8 @@
         { src: 'https://drive.google.com/thumbnail?id=1--iy9uLGumgknSXbmgJM-_gZg1fhUbR5&sz=w2000',  type: 'img' },
         { src: 'https://drive.google.com/thumbnail?id=12MoLiIDqREJ47C6TwIjBqDnbURwiK-v1&sz=w2000', type: 'img' },
         { src: 'https://drive.google.com/thumbnail?id=1pMWs7u0lvQSVLgopy7KaxIhKkiuXNZCQ&sz=w2000',  type: 'img' },
-        { src: 'https://drive.google.com/thumbnail?id=12tz1Zf9DVm8TQs46fQsi6IfobXPXV-Xe&sz=w2000',  type: 'img' }
+        { src: 'https://drive.google.com/thumbnail?id=12tz1Zf9DVm8TQs46fQsi6IfobXPXV-Xe&sz=w2000',  type: 'img' },
+        { src: 'https://drive.google.com/thumbnail?id=1TgZap2Fomk6dn6BJFg7gZezz8Mes0cXw&sz=w2000',  type: 'img' } // ADDED INTRO IMAGE
       ];
       const startTime = Date.now();
       let loaded = 0;
