@@ -333,6 +333,10 @@
             <p class="body-label">Party Size</p>
             <p class="detail-val" id="partySizeVal">—</p>
           </div>
+          <div class="detail-cell detail-cell--full" id="seatingWrap" style="display:none;">
+            <p class="body-label">Seating Assignment</p>
+            <p class="detail-val" id="seatingVal" style="font-size: clamp(15px,3.5vw,19px); color: var(--champagne-dk); letter-spacing: 0.05em;">—</p>
+          </div>
         </div>
 
         <div class="gold-rule"></div>
@@ -498,6 +502,13 @@
       const count = parseInt(data.guestCount) || 0;
       document.getElementById('partySizeVal').textContent =
         isAttending ? (count === 1 ? '1 Guest' : count + ' Guests') : '—';
+
+      // Seating assignment
+      const seat = (data.seating || '').toString().trim();
+      if (seat && seat !== '') {
+        document.getElementById('seatingVal').textContent = seat;
+        document.getElementById('seatingWrap').style.display = 'block';
+      }
 
       // Message
       const msg = (data.message || '').trim();
